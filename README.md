@@ -155,6 +155,12 @@ Progress is **automatically saved** when the app closes and restored on reopen. 
 
 ## 🌱 Pet Evolution
 
+<div align="center">
+
+![Pet Evolution Demo](docs/images/pet-animation-go.gif)
+
+</div>
+
 Your pet evolves through five stages as you level up. Each level costs `current_level × 50 XP`, so progression gets harder over time.
 
 | Stage | Level | Cat 🐱 | Dog 🐶 |
