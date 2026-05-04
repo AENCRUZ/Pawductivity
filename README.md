@@ -102,7 +102,7 @@ Pawductivity/
 
 ### Start Up
 
-![Start Up Preview](docs/images/startup-preview.png)
+![Start Up Preview](docs/images/startup-preview.gif)
 
 ### Dashboard
 
