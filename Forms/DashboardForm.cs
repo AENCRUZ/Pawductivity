@@ -1,4 +1,4 @@
-﻿using Pawductivity.Controls;
+using Pawductivity.Controls;
 using Pawductivity.Managers;
 using Pawductivity.Models;
 using Pawductivity.Persistence;
@@ -107,7 +107,7 @@ public class DashboardForm : Form
             ForeColor = Color.White,
             BackColor = Color.Transparent,
             AutoSize = true,
-            Location = new Point(Margin + 44, (TopBarH - 28) / 2),
+            Location = new Point(Margin + 25, (TopBarH - 40) / 2),
         };
 
         var lblUser = new Label
