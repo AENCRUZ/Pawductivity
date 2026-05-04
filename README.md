@@ -88,6 +88,7 @@ Pawductivity/
     ├── SettingsForm.cs            ← Theme selection screen
     ├── ShopForm.cs                ← Coin shop and purchase flow
     └── StatsForm.cs               ← Productivity analytics
+    └── Startupform.cs             ← First screen, title/welcome screen
 ```
 
 ---
