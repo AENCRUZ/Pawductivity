@@ -1,4 +1,4 @@
-﻿using Pawductivity.Models;
+using Pawductivity.Models;
 
 namespace Pawductivity.Forms;
 
@@ -25,11 +25,11 @@ public class SettingsForm : Form
 
         var title = new Label
         {
-            Text = "⚙ Settings",
+            Text = "⚙Settings",
             Font = PawTheme.FontTitle,
             ForeColor = PawTheme.Primary,
             AutoSize = true,
-            Location = new Point(22, 18),
+            Location = new Point(10, 18),
             BackColor = Color.Transparent,
         };
 
@@ -39,7 +39,7 @@ public class SettingsForm : Form
             Font = PawTheme.FontBody,
             ForeColor = PawTheme.TextMuted,
             AutoSize = true,
-            Location = new Point(24, 66),
+            Location = new Point(24, 75),
             BackColor = Color.Transparent,
         };
 
