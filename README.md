@@ -191,6 +191,7 @@ Coins are earned by completing tasks (`XP gained ÷ 2` per task). Spend them in 
 
 ![Pet Evolution Demo](docs/images/pet-animation-go.gif)
 
+</div>
 Your pet evolves through five stages as you level up. Each level costs `current_level × 50 XP`, so leveling gets progressively harder.
 
 | Stage | Level | Cat 🐱 | Dog 🐶 |
