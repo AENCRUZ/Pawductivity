@@ -271,6 +271,27 @@ Coins are earned by completing tasks (`XP gained ÷ 2`). Spend them to restore y
 
 </div>
 
+## 🌸 Theming
+
+<div align="center">
+
+![Theme](https://img.shields.io/badge/Theme-Pink_Kawaii-ff6996?style=for-the-badge)
+![Theme](https://img.shields.io/badge/Theme-Blue_Calm-3e87c8?style=for-the-badge)
+![Theme](https://img.shields.io/badge/Theme-Green_Nature-54965c?style=for-the-badge)
+![Theme](https://img.shields.io/badge/Theme-Purple_Night-ac78dc?style=for-the-badge)
+![Theme](https://img.shields.io/badge/Theme-Strawberry-e65269?style=for-the-badge)
+
+</div>
+
+Theme palettes live in `PawTheme.cs`. `PawTheme.SetTheme(...)` updates the active palette, and forms read colors from static properties:
+
+```csharp
+public static Color Background => _activeTheme.Background;
+public static Color Primary    => _activeTheme.Primary;
+public static Color Surface    => _activeTheme.Surface;
+// ...
+
+```
 Open settings via the `⚙` button in the top bar to switch themes instantly. Each profile saves its own theme selection.
 
 | Theme | Style |
@@ -342,28 +363,6 @@ var purchase = _gm.BuyItem(item);
 ```
 
 Each method returns a `PetChangeResult` that tells the UI exactly what changed — keeping game logic out of the forms entirely. Save/load is similarly hidden behind `SaveManager.Save(_gm)` and `SaveManager.Restore(data)`.
-
----
-
-## 🌸 Theming
-
-<div align="center">
-
-![Theme](https://img.shields.io/badge/Theme-Pink_Kawaii-ff6996?style=for-the-badge)
-![Theme](https://img.shields.io/badge/Theme-Blue_Calm-3e87c8?style=for-the-badge)
-![Theme](https://img.shields.io/badge/Theme-Green_Nature-54965c?style=for-the-badge)
-![Theme](https://img.shields.io/badge/Theme-Purple_Night-ac78dc?style=for-the-badge)
-![Theme](https://img.shields.io/badge/Theme-Strawberry-e65269?style=for-the-badge)
-
-</div>
-
-Theme palettes live in `PawTheme.cs`. `PawTheme.SetTheme(...)` updates the active palette, and forms read colors from static properties:
-
-```csharp
-public static Color Background => _activeTheme.Background;
-public static Color Primary    => _activeTheme.Primary;
-public static Color Surface    => _activeTheme.Surface;
-// ...
 
 ---
 
