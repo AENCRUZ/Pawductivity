@@ -271,8 +271,6 @@ Coins are earned by completing tasks (`XP gained ÷ 2`). Spend them to restore y
 
 </div>
 
-## 🌸 Theming
-
 <div align="center">
 
 ![Theme](https://img.shields.io/badge/Theme-Pink_Kawaii-ff6996?style=for-the-badge)
