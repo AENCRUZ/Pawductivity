@@ -250,7 +250,7 @@ Use the stats screen to spot patterns — if your pet keeps getting sick, it's a
 
 <div align="center">
 
-![Shop Preview](docs/images/shop-preview.png)
+![Shop Preview](docs/images/shop-preview.gif)
 
 </div>
 
