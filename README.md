@@ -271,6 +271,16 @@ Coins are earned by completing tasks (`XP gained ÷ 2`). Spend them to restore y
 
 </div>
 
+<div align="center">
+
+![Theme](https://img.shields.io/badge/Theme-Pink_Kawaii-ff6996?style=for-the-badge)
+![Theme](https://img.shields.io/badge/Theme-Blue_Calm-3e87c8?style=for-the-badge)
+![Theme](https://img.shields.io/badge/Theme-Green_Nature-54965c?style=for-the-badge)
+![Theme](https://img.shields.io/badge/Theme-Purple_Night-ac78dc?style=for-the-badge)
+![Theme](https://img.shields.io/badge/Theme-Strawberry-e65269?style=for-the-badge)
+
+</div>
+
 Theme palettes live in `PawTheme.cs`. `PawTheme.SetTheme(...)` updates the active palette, and forms read colors from static properties:
 
 ```csharp
@@ -289,15 +299,17 @@ Open settings via the `⚙` button in the top bar to switch themes instantly. Ea
 | Green Nature | Fresh green palette |
 | Purple Night | Dark purple theme |
 | Strawberry | Warm red-pink palette |
-<div align="center">
 
-![Theme](https://img.shields.io/badge/Theme-Pink_Kawaii-ff6996?style=for-the-badge)
-![Theme](https://img.shields.io/badge/Theme-Blue_Calm-3e87c8?style=for-the-badge)
-![Theme](https://img.shields.io/badge/Theme-Green_Nature-54965c?style=for-the-badge)
-![Theme](https://img.shields.io/badge/Theme-Purple_Night-ac78dc?style=for-the-badge)
-![Theme](https://img.shields.io/badge/Theme-Strawberry-e65269?style=for-the-badge)
+Theme palettes live in `PawTheme.cs`. `PawTheme.SetTheme(...)` updates the active palette, and forms read colors from static properties:
 
-</div>
+```csharp
+public static Color Background => _activeTheme.Background;
+public static Color Primary    => _activeTheme.Primary;
+public static Color Surface    => _activeTheme.Surface;
+// ...
+
+```
+
 ---
 
 ## 🎓 OOP Principles
