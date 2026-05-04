@@ -101,10 +101,6 @@ Pawductivity/
 
 ![Dashboard Preview](docs/images/dashboard-preview.png)
 
-### Pet Animations
-
-![Pet Animation Demo](docs/images/pet-animation-demo.gif)
-
 ### Theme Switching
 
 ![Theme Switching GIF](docs/images/theme-switching.gif)
@@ -158,7 +154,7 @@ Progress is **automatically saved** when the app closes and restored on reopen. 
 
 <div align="center">
   <img src="docs/images/pet-animation-go.gif" width="40%" />
-  <img src="docs/images/pet-animation-dog.gif" width="41%" />
+  <img src="docs/images/pet-animation-dog.gif" width="40%" />
 </div>
 
 Your pet evolves through five stages as you level up. Each level costs `current_level × 50 XP`, so progression gets harder over time.
@@ -351,6 +347,16 @@ Each method returns a `PetChangeResult` that tells the UI exactly what changed �
 
 ## 🌸 Theming
 
+<div align="center">
+
+![Theme](https://img.shields.io/badge/Theme-Pink_Kawaii-ff6996?style=for-the-badge)
+![Theme](https://img.shields.io/badge/Theme-Blue_Calm-3e87c8?style=for-the-badge)
+![Theme](https://img.shields.io/badge/Theme-Green_Nature-54965c?style=for-the-badge)
+![Theme](https://img.shields.io/badge/Theme-Purple_Night-ac78dc?style=for-the-badge)
+![Theme](https://img.shields.io/badge/Theme-Strawberry-e65269?style=for-the-badge)
+
+</div>
+
 Theme palettes live in `PawTheme.cs`. `PawTheme.SetTheme(...)` updates the active palette, and forms read colors from static properties:
 
 ```csharp
@@ -358,9 +364,6 @@ public static Color Background => _activeTheme.Background;
 public static Color Primary    => _activeTheme.Primary;
 public static Color Surface    => _activeTheme.Surface;
 // ...
-```
-
-`PawTheme.StyleButton(btn)` and `PawTheme.StyleButton(btn, outlined: true)` apply consistent button styling and hover behavior from a single helper.
 
 ---
 
