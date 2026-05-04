@@ -12,7 +12,7 @@
 ![Platform](https://img.shields.io/badge/Windows-0078D4?style=flat-square&logo=windows&logoColor=white)
 ![Framework](https://img.shields.io/badge/.NET_8_WinForms-512BD4?style=flat-square&logo=dotnet&logoColor=white)
 ![IDE](https://img.shields.io/badge/Visual_Studio-5C2D91?style=flat-square&logo=visualstudio&logoColor=white)
-![Theme](https://img.shields.io/badge/Theme-Pink_Kawaii_🌸-ff69b4?style=flat-square)
+![Themes](https://img.shields.io/badge/Themes-5_Palettes-ff69b4?style=flat-square)
 
 > *Stay productive. Keep your pet happy. Don't let your tasks go overdue.*
 
@@ -24,9 +24,31 @@
 
 **Pawductivity** is a gamified productivity desktop app built with **.NET 8 WinForms**. You adopt a virtual pet — a cat 🐱 or a dog 🐶 — and your tasks directly affect its health, mood, level, coins, and evolution.
 
-Complete tasks and your pet gains XP, mood, health, and coins. Let tasks become overdue and your pet loses health and mood. The app now includes animated pet reactions, floating stat-change animations, coin gain effects, and shop item animations so the pet feels more alive while you manage tasks.
+Complete tasks and your pet gains XP, mood, health, and coins. Let tasks become overdue and your pet loses health and mood. The app now includes animated pet reactions, floating stat-change animations, coin gain effects, shop item animations, and switchable dashboard themes so the pet feels more alive while you manage tasks.
 
 It's a productivity tool with stakes — and a little companion watching your progress.
+
+---
+
+## 🖼️ Visual Preview
+
+> Replace these placeholders with your own screenshots, GIFs, and PNG assets.
+
+<div align="center">
+
+### Dashboard
+
+![Dashboard Preview](docs/images/dashboard-preview.png)
+
+### Pet Animation
+
+![Pet Animation GIF](docs/images/pet-animation.gif)
+
+### Theme Switching
+
+![Theme Switching GIF](docs/images/theme-switching.gif)
+
+</div>
 
 ---
 
@@ -59,7 +81,7 @@ Pawductivity/
 ├── Pawductivity.slnx              ← Solution file
 ├── Pawductivity.csproj            ← Project file
 ├── Program.cs                     ← Entry point
-├── PawTheme.cs                    ← Centralized theme: colors, fonts, button styles
+├── PawTheme.cs                    ← Active theme system, palettes, fonts, button styles
 │
 ├── Animations/
 │   ├── PetAnimationState.cs       ← Pet animation state enum
@@ -71,6 +93,7 @@ Pawductivity/
 ├── Models/
 │   ├── Pet.cs                     ← Abstract base class: shared pet state and evolution
 │   ├── PetTypes.cs                ← CatPet and DogPet behavior
+│   ├── AppTheme.cs                ← Theme palette model
 │   ├── PetChangeResult.cs         ← Stat-change result used for UI animations
 │   ├── TaskItem.cs                ← Task data model and overdue penalty tracking
 │   ├── ShopItem.cs                ← Shop item model and default shop list
@@ -84,6 +107,7 @@ Pawductivity/
     ├── LoginForm.cs               ← Profile selector and new profile creation
     ├── DashboardForm.cs           ← Main screen: task list, stats, and pet control host
     ├── TaskEditForm.cs            ← Add and edit task dialog
+    ├── SettingsForm.cs            ← Theme selection screen
     ├── ShopForm.cs                ← Coin shop and purchase flow
     └── StatsForm.cs               ← Productivity analytics
 ```
@@ -100,12 +124,17 @@ Login → Add Task → Complete Task → Pet Reacts → Earn Coins → Buy Items
 
 Every task you complete rewards you and your pet. Every overdue task applies a health and mood penalty once, then remembers that penalty so the same task does not drain the pet repeatedly every minute.
 
-Progress is **automatically saved** when the app closes and restored when you reopen it. Profiles, pet stats, tasks, streaks, coins, and overdue penalty state are all persisted.
+Progress is **automatically saved** when the app closes and restored when you reopen it. Profiles, pet stats, tasks, streaks, coins, selected theme, and overdue penalty state are all persisted.
 
 ---
 
 ## 🐾 Pet Animations
 
+<div align="center">
+
+![Pet Animation Demo](docs/images/pet-animation-demo.gif)
+
+</div>
 The pet animation system is separated from the dashboard UI. `DashboardForm` hosts `PetAnimationControl`, while animation drawing lives in `Animations/PetRenderer.cs`.
 
 | Event | Animation |
@@ -119,8 +148,36 @@ The pet animation system is separated from the dashboard UI. `DashboardForm` hos
 
 ---
 
+## ⚙️ Settings & Themes
+
+<div align="center">
+
+![Settings Theme Preview](docs/images/settings-themes.png)
+
+</div>
+The dashboard has a settings button (`⚙`) in the top bar. Opening it shows theme buttons that can switch the app palette immediately.
+
+Available themes:
+
+| Theme | Style |
+|---|---|
+| Pink Kawaii | Original soft pink theme |
+| Blue Calm | Light blue productivity palette |
+| Green Nature | Fresh green palette |
+| Purple Night | Dark purple theme |
+| Strawberry | Warm red-pink strawberry palette |
+
+Theme switching is handled by `PawTheme.SetTheme(...)`. The selected theme key is saved in `SaveData.ThemeKey`, so each profile can reopen with its chosen theme.
+
+---
+
 ## 🛍️ Shop Items & Purchase Animations
 
+<div align="center">
+
+![Shop Preview](docs/images/shop-preview.png)
+
+</div>
 Coins are earned by completing tasks (`XP gained ÷ 2` per task). Spend them in the shop to restore your pet's health and mood.
 
 | Item | Cost | Health | Mood | Purchase Animation |
@@ -201,7 +258,8 @@ Overdue penalties are applied only once per task using `TaskItem.OverduePenaltyA
 | Coin-based shop system | ✅ |
 | Daily streak tracking | ✅ |
 | Productivity stats and analytics screen | ✅ |
-| Consistent pink kawaii theme | ✅ |
+| Settings form with switchable themes | ✅ |
+| Theme persistence across sessions | ✅ |
 | Data persistence across sessions | ✅ |
 | Atomic save writes | ✅ |
 
@@ -289,21 +347,40 @@ Persistence is abstracted too. Forms call `SaveManager.Save(_gm)` and `SaveManag
 
 ## 🌸 Theming
 
-All colors and fonts live in `PawTheme.cs`. Change a value here and it updates every form, button, progress bar, and themed control in the app.
+Theme palettes live in `PawTheme.cs` and use the `AppTheme` model. `PawTheme.SetTheme(...)` changes the active palette, and new/rebuilt forms read their colors from the active theme.
 
 ```csharp
-public static readonly Color Background = Color.FromArgb(255, 240, 245);
-public static readonly Color Surface    = Color.FromArgb(255, 220, 230);
-public static readonly Color Primary    = Color.FromArgb(255, 105, 150);
-public static readonly Color Secondary  = Color.FromArgb(255, 182, 193);
-public static readonly Color TextDark   = Color.FromArgb( 80,  30,  50);
-public static readonly Color TextMuted  = Color.FromArgb(160,  90, 120);
-public static readonly Color HealthBar  = Color.FromArgb(255,  80, 120);
-public static readonly Color MoodBar    = Color.FromArgb(255, 200,  80);
-public static readonly Color XpBar      = Color.FromArgb(140, 200, 255);
+public static Color Background => _activeTheme.Background;
+public static Color Surface    => _activeTheme.Surface;
+public static Color Primary    => _activeTheme.Primary;
+public static Color Secondary  => _activeTheme.Secondary;
+public static Color TextDark   => _activeTheme.TextDark;
+public static Color TextMuted  => _activeTheme.TextMuted;
+public static Color HealthBar  => _activeTheme.HealthBar;
+public static Color MoodBar    => _activeTheme.MoodBar;
+public static Color XpBar      => _activeTheme.XpBar;
 ```
 
 `PawTheme.StyleButton(btn)` and `PawTheme.StyleButton(btn, outlined: true)` apply consistent styling and hover behavior from one helper method.
+
+---
+
+## 📂 Suggested Image Files
+
+Create this folder in the project when you are ready to add visuals:
+
+```text
+docs/
+└── images/
+    ├── dashboard-preview.png
+    ├── pet-animation.gif
+    ├── theme-switching.gif
+    ├── pet-animation-demo.gif
+    ├── settings-themes.png
+    └── shop-preview.png
+```
+
+You can rename the files later; just update the matching image links in this README.
 
 ---
 
