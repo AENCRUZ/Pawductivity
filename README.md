@@ -32,8 +32,6 @@ It's a productivity tool with stakes — and a little companion watching your pr
 
 ## 🖼️ Visual Preview
 
-> Replace these placeholders with your own screenshots, GIFs, and PNG assets.
-
 <div align="center">
 
 ### Dashboard
@@ -362,25 +360,6 @@ public static Color XpBar      => _activeTheme.XpBar;
 ```
 
 `PawTheme.StyleButton(btn)` and `PawTheme.StyleButton(btn, outlined: true)` apply consistent styling and hover behavior from one helper method.
-
----
-
-## 📂 Suggested Image Files
-
-Create this folder in the project when you are ready to add visuals:
-
-```text
-docs/
-└── images/
-    ├── dashboard-preview.png
-    ├── pet-animation.gif
-    ├── theme-switching.gif
-    ├── pet-animation-demo.gif
-    ├── settings-themes.png
-    └── shop-preview.png
-```
-
-You can rename the files later; just update the matching image links in this README.
 
 ---
 
