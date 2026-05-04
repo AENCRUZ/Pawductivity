@@ -52,6 +52,46 @@ It's a productivity tool with stakes — and a little companion watching your ev
 
 ---
 
+## 📁 Project Structure
+
+```text
+Pawductivity/
+├── Pawductivity.slnx              ← Solution file
+├── Pawductivity.csproj            ← Project file
+├── Program.cs                     ← Entry point
+├── PawTheme.cs                    ← Theme system, palettes, fonts, button styles
+│
+├── Animations/
+│   ├── PetAnimationState.cs       ← Pet animation state enum
+│   └── PetRenderer.cs             ← Cat, dog, speech bubble, and drawing helpers
+│
+├── Controls/
+│   └── PetAnimationControl.cs     ← Animated pet canvas and visual effects
+│
+├── Models/
+│   ├── Pet.cs                     ← Abstract base class: shared pet state and evolution
+│   ├── PetTypes.cs                ← CatPet and DogPet behavior
+│   ├── AppTheme.cs                ← Theme palette model
+│   ├── PetChangeResult.cs         ← Stat-change result used for UI animations
+│   ├── TaskItem.cs                ← Task data model and overdue penalty tracking
+│   ├── ShopItem.cs                ← Shop item model and default shop list
+│   └── SaveData.cs                ← Serializable snapshot models
+│
+├── Managers/
+│   ├── GameManager.cs             ← Core game logic and stat-change calculations
+│   └── SaveManager.cs             ← File I/O: save, load, list, delete profiles
+│
+└── Forms/
+    ├── LoginForm.cs               ← Profile selector and new profile creation
+    ├── DashboardForm.cs           ← Main screen: task list, stats, and pet control host
+    ├── TaskEditForm.cs            ← Add and edit task dialog
+    ├── SettingsForm.cs            ← Theme selection screen
+    ├── ShopForm.cs                ← Coin shop and purchase flow
+    └── StatsForm.cs               ← Productivity analytics
+```
+
+---
+
 ## 🖼️ Visual Preview
 
 <div align="center">
@@ -175,6 +215,31 @@ The animation system is fully decoupled from the dashboard UI. `DashboardForm` h
 
 ---
 
+## 📊 Stats & Analytics
+
+<div align="center">
+
+![Stats Preview](docs/images/stats-preview.png)
+
+</div>
+
+The **Stats screen** (`StatsForm`) gives you a snapshot of your productivity over time. Access it from the dashboard to review your progress and see how well you've been keeping your pet happy.
+
+Tracked metrics include:
+
+| Metric | Description |
+|---|---|
+| Tasks completed | Total number of tasks finished |
+| Tasks missed | Total overdue tasks that triggered a penalty |
+| Current streak | Consecutive days with at least one task completed |
+| Longest streak | Your all-time best streak |
+| Coins earned | Total coins accumulated from task completions |
+| Pet level | Current evolution stage and level progress |
+
+Use the stats screen to spot patterns — if your pet keeps getting sick, it's a sign your task completion rate needs work. 🐾
+
+---
+
 ## 🛍️ Shop
 
 <div align="center">
@@ -213,46 +278,6 @@ Open settings via the `⚙` button in the top bar to switch themes instantly. Ea
 | Green Nature | Fresh green palette |
 | Purple Night | Dark purple theme |
 | Strawberry | Warm red-pink palette |
-
----
-
-## 📁 Project Structure
-
-```text
-Pawductivity/
-├── Pawductivity.slnx              ← Solution file
-├── Pawductivity.csproj            ← Project file
-├── Program.cs                     ← Entry point
-├── PawTheme.cs                    ← Theme system, palettes, fonts, button styles
-│
-├── Animations/
-│   ├── PetAnimationState.cs       ← Pet animation state enum
-│   └── PetRenderer.cs             ← Cat, dog, speech bubble, and drawing helpers
-│
-├── Controls/
-│   └── PetAnimationControl.cs     ← Animated pet canvas and visual effects
-│
-├── Models/
-│   ├── Pet.cs                     ← Abstract base class: shared pet state and evolution
-│   ├── PetTypes.cs                ← CatPet and DogPet behavior
-│   ├── AppTheme.cs                ← Theme palette model
-│   ├── PetChangeResult.cs         ← Stat-change result used for UI animations
-│   ├── TaskItem.cs                ← Task data model and overdue penalty tracking
-│   ├── ShopItem.cs                ← Shop item model and default shop list
-│   └── SaveData.cs                ← Serializable snapshot models
-│
-├── Managers/
-│   ├── GameManager.cs             ← Core game logic and stat-change calculations
-│   └── SaveManager.cs             ← File I/O: save, load, list, delete profiles
-│
-└── Forms/
-    ├── LoginForm.cs               ← Profile selector and new profile creation
-    ├── DashboardForm.cs           ← Main screen: task list, stats, and pet control host
-    ├── TaskEditForm.cs            ← Add and edit task dialog
-    ├── SettingsForm.cs            ← Theme selection screen
-    ├── ShopForm.cs                ← Coin shop and purchase flow
-    └── StatsForm.cs               ← Productivity analytics
-```
 
 ---
 
