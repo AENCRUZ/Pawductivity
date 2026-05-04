@@ -100,6 +100,10 @@ Pawductivity/
 
 <div align="center">
 
+### Start Up
+
+![Start Up Preview](docs/images/startup-preview.png)
+
 ### Dashboard
 
 ![Dashboard Preview](docs/images/dashboard-preview.png)
