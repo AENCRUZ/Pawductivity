@@ -190,7 +190,7 @@ public class LoginForm : Form
 
         var lblUser = MakeSmallLabel("Your name 👤", new Point(14, 43));
         _txtUsername = MakeTextBox(new Point(14, 64), CardW - 28);
-        _txtUsername.PlaceholderText = "e.g. Marie";
+        _txtUsername.PlaceholderText = "e.g. Jane Doe";
 
         var lblPet = MakeSmallLabel("Pet name 🐱", new Point(14, 101));
         _txtPetName = MakeTextBox(new Point(14, 122), CardW - 28);
