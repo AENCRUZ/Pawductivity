@@ -24,25 +24,9 @@
 
 **Pawductivity** is a gamified productivity desktop app built with **.NET 8 WinForms**. You adopt a virtual pet — a cat 🐱 or a dog 🐶 — and your tasks directly affect its health, mood, level, coins, and evolution.
 
-Complete tasks and your pet gains XP, mood, health, and coins. Let tasks become overdue and your pet loses health and mood. The app now includes animated pet reactions, floating stat-change animations, coin gain effects, shop item animations, and switchable dashboard themes so the pet feels more alive while you manage tasks.
+Complete tasks and your pet gains XP, mood, health, and coins. Let tasks become overdue and your pet loses health and mood. The app features animated pet reactions, floating stat-change animations, coin gain effects, shop item animations, and switchable dashboard themes — so your pet feels alive while you stay on top of your work.
 
-It's a productivity tool with stakes — and a little companion watching your progress.
-
----
-
-## 🖼️ Visual Preview
-
-<div align="center">
-
-### Dashboard
-
-![Dashboard Preview](docs/images/dashboard-preview.png)
-
-### Theme Switching
-
-![Theme Switching GIF](docs/images/theme-switching.gif)
-
-</div>
+It's a productivity tool with stakes — and a little companion watching your every move.
 
 ---
 
@@ -68,6 +52,170 @@ It's a productivity tool with stakes — and a little companion watching your pr
 
 ---
 
+## 🖼️ Visual Preview
+
+<div align="center">
+
+### Dashboard
+
+![Dashboard Preview](docs/images/dashboard-preview.png)
+
+### Pet Animations
+
+![Pet Animation Demo](docs/images/pet-animation-demo.gif)
+
+### Theme Switching
+
+![Theme Switching GIF](docs/images/theme-switching.gif)
+
+</div>
+
+---
+
+## 🔄 Gameplay Loop
+
+```text
+Login → Add Task → Complete Task → Pet Reacts → Earn Coins → Buy Items
+           ↑                                                       |
+           └───────────────────── loop ────────────────────────────┘
+```
+
+Every task you complete rewards you and your pet. Every overdue task applies a health and mood penalty **once**, then remembers it — so the same task won't drain your pet repeatedly every minute.
+
+Progress is **automatically saved** when the app closes and restored on reopen. Profiles, pet stats, tasks, streaks, coins, selected theme, and overdue penalty state are all persisted.
+
+---
+
+## 🎮 Features
+
+| Feature | Status |
+|---|:---:|
+| Login with username and pet name | ✅ |
+| Multi-profile support | ✅ |
+| Choose Cat 🐱 or Dog 🐶 | ✅ |
+| Add, edit, delete, and complete tasks | ✅ |
+| Task priority and due-date tracking | ✅ |
+| Complete tasks → pet gains XP, mood, health, and coins | ✅ |
+| Overdue tasks → pet loses health and mood once per overdue task | ✅ |
+| Pet levels up and evolves | ✅ |
+| Animated cat and dog pet drawings | ✅ |
+| Speech bubbles based on mood | ✅ |
+| Task completion animations | ✅ |
+| XP, mood, health, and coin floating animations | ✅ |
+| Shop item purchase animations | ✅ |
+| Coin-based shop system | ✅ |
+| Daily streak tracking | ✅ |
+| Productivity stats and analytics screen | ✅ |
+| Settings form with switchable themes | ✅ |
+| Theme persistence across sessions | ✅ |
+| Data persistence across sessions | ✅ |
+| Atomic save writes | ✅ |
+
+---
+
+## 🌱 Pet Evolution
+
+Your pet evolves through five stages as you level up. Each level costs `current_level × 50 XP`, so progression gets harder over time.
+
+| Stage | Level | Cat 🐱 | Dog 🐶 |
+|---|---|---|---|
+| 🥚 **Egg** | 1 | `🥚` | `🥚` |
+| 🐱 **Baby** | 2–3 | `🐱` | `🐶` |
+| 🐈 **Junior** | 4–6 | `🐈‍⬛` | `🐕` |
+| 🐈 **Adult** | 7–9 | `🐈` | `🦮` |
+| ✨ **Legend** | 10+ | `✨🐈‍⬛✨` | `✨🐕‍🦺✨` |
+
+**How XP works:** Cats earn more XP per task but lose mood faster when one is missed. Dogs earn slightly less XP but are more forgiving on mood — though they take more health damage.
+
+| Pet | High priority | Medium priority | Low priority |
+|---|---:|---:|---:|
+| 🐱 Cat XP | +30 | +20 | +10 |
+| 🐶 Dog XP | +25 | +15 | +8 |
+
+> Each pet starts with **Health 80 · Mood 70 · Level 1 · 0 coins**. Health and mood are clamped between 0–100, and coins can never go below 0.
+
+---
+
+## 😺 Mood System
+
+Your pet's mood is a 0–100 value that maps to one of four states:
+
+| Mood | State | Emoji | Effect |
+|---|---|---|---|
+| 70–100 | Happy | `🐾✨` | Positive greetings and happy animation |
+| 40–69 | Neutral | `🐾` | Calm, waiting behavior |
+| 20–39 | Sad | `😿` / `🥺` | Sad expression and animation |
+| 0–19 | Sick | `🤒` | Urgent — complete tasks or visit the shop |
+
+### Task Effects
+
+| Event | Cat 🐱 | Dog 🐶 |
+|---|---|---|
+| Complete high task | +30 XP, +15 Mood, +5 Health, +15 Coins | +25 XP, +20 Mood, +8 Health, +12 Coins |
+| Complete medium task | +20 XP, +15 Mood, +5 Health, +10 Coins | +15 XP, +20 Mood, +8 Health, +7 Coins |
+| Complete low task | +10 XP, +15 Mood, +5 Health, +5 Coins | +8 XP, +20 Mood, +8 Health, +4 Coins |
+| Miss overdue task | −20 Mood, −8 Health | −12 Mood, −10 Health |
+
+Overdue penalties are applied only once per task via `TaskItem.OverduePenaltyApplied`.
+
+---
+
+## 🐾 Pet Animations
+
+The animation system is fully decoupled from the dashboard UI. `DashboardForm` hosts `PetAnimationControl`, while all drawing logic lives in `Animations/PetRenderer.cs`.
+
+| Event | Animation |
+|---|---|
+| Idle | Gentle bounce, blinking, mood-based expression |
+| Speech bubble | Random cat/dog messages based on mood |
+| Task completed | XP, mood, and coin floating text |
+| Task overdue | Health and mood loss floating text |
+| Coin reward | Coin gain animation after task completion |
+| Shop purchase | Item-specific visual effect and stat gain animation |
+
+---
+
+## 🛍️ Shop
+
+<div align="center">
+
+![Shop Preview](docs/images/shop-preview.png)
+
+</div>
+
+Coins are earned by completing tasks (`XP gained ÷ 2`). Spend them to restore your pet's health and mood.
+
+| Item | Cost | Health | Mood | Animation |
+|---|:---:|:---:|:---:|---|
+| 🎀 Pink Ribbon | 10 | — | +15 | Ribbon sparkle |
+| 🍪 Star Cookie | 15 | +20 | +10 | Eating animation |
+| 🍓 Strawberry Milk | 20 | +30 | — | Sip animation |
+| 🌸 Flower Crown | 25 | — | +30 | Bloom effect |
+| 🛏️ Cozy Blanket | 30 | +25 | +20 | Cozy effect |
+| 🌈 Rainbow Toy | 40 | — | +40 | Play animation |
+
+---
+
+## ⚙️ Themes
+
+<div align="center">
+
+![Settings Theme Preview](docs/images/settings-themes.png)
+
+</div>
+
+Open settings via the `⚙` button in the top bar to switch themes instantly. Each profile saves its own theme selection.
+
+| Theme | Style |
+|---|---|
+| Pink Kawaii | Original soft pink theme |
+| Blue Calm | Light blue productivity palette |
+| Green Nature | Fresh green palette |
+| Purple Night | Dark purple theme |
+| Strawberry | Warm red-pink palette |
+
+---
+
 ## 📁 Project Structure
 
 ```text
@@ -75,7 +223,7 @@ Pawductivity/
 ├── Pawductivity.slnx              ← Solution file
 ├── Pawductivity.csproj            ← Project file
 ├── Program.cs                     ← Entry point
-├── PawTheme.cs                    ← Active theme system, palettes, fonts, button styles
+├── PawTheme.cs                    ← Theme system, palettes, fonts, button styles
 │
 ├── Animations/
 │   ├── PetAnimationState.cs       ← Pet animation state enum
@@ -108,205 +256,37 @@ Pawductivity/
 
 ---
 
-## 🔄 Gameplay Loop
-
-```text
-Login → Add Task → Complete Task → Pet Reacts → Earn Coins → Buy Items
-           ↑                                                       |
-           └───────────────────── loop ────────────────────────────┘
-```
-
-Every task you complete rewards you and your pet. Every overdue task applies a health and mood penalty once, then remembers that penalty so the same task does not drain the pet repeatedly every minute.
-
-Progress is **automatically saved** when the app closes and restored when you reopen it. Profiles, pet stats, tasks, streaks, coins, selected theme, and overdue penalty state are all persisted.
-
----
-
-## 🐾 Pet Animations
-
-<div align="center">
-
-![Pet Animation Demo](docs/images/pet-animation-demo.gif)
-
-</div>
-The pet animation system is separated from the dashboard UI. `DashboardForm` hosts `PetAnimationControl`, while animation drawing lives in `Animations/PetRenderer.cs`.
-
-| Event | Animation |
-|---|---|
-| Normal pet idle | Gentle bounce, blinking, mood-based expression |
-| Speech bubble | Random cat/dog messages based on mood |
-| Task completed | XP gain, mood gain, and coin gain floating text |
-| Task overdue | Health loss and mood loss floating text |
-| Coin reward | Coin gain animation after task completion |
-| Shop purchase | Item-specific visual effect and stat gain animation |
-
----
-
-## ⚙️ Settings & Themes
-
-<div align="center">
-
-![Settings Theme Preview](docs/images/settings-themes.png)
-
-</div>
-The dashboard has a settings button (`⚙`) in the top bar. Opening it shows theme buttons that can switch the app palette immediately.
-
-Available themes:
-
-| Theme | Style |
-|---|---|
-| Pink Kawaii | Original soft pink theme |
-| Blue Calm | Light blue productivity palette |
-| Green Nature | Fresh green palette |
-| Purple Night | Dark purple theme |
-| Strawberry | Warm red-pink strawberry palette |
-
-Theme switching is handled by `PawTheme.SetTheme(...)`. The selected theme key is saved in `SaveData.ThemeKey`, so each profile can reopen with its chosen theme.
-
----
-
-## 🛍️ Shop Items & Purchase Animations
-
-<div align="center">
-
-![Shop Preview](docs/images/shop-preview.png)
-
-</div>
-Coins are earned by completing tasks (`XP gained ÷ 2` per task). Spend them in the shop to restore your pet's health and mood.
-
-| Item | Cost | Health | Mood | Purchase Animation |
-|---|:---:|:---:|:---:|---|
-| 🎀 Pink Ribbon | 10 | — | +15 | Ribbon sparkle / mood boost |
-| 🍪 Star Cookie | 15 | +20 | +10 | Eating animation plus health and mood |
-| 🍓 Strawberry Milk | 20 | +30 | — | Sip animation plus health |
-| 🌸 Flower Crown | 25 | — | +30 | Bloom / mood boost |
-| 🛏️ Cozy Blanket | 30 | +25 | +20 | Cozy effect plus health and mood |
-| 🌈 Rainbow Toy | 40 | — | +40 | Play animation plus mood |
-
----
-
-## 🌱 Pet Evolution
-
-<div align="center">
-
-![Pet Evolution Demo](docs/images/pet-animation-go.gif)
-
-</div>
-Your pet evolves through five stages as you level up. Each level costs `current_level × 50 XP`, so leveling gets progressively harder.
-
-| Stage | Level | Cat 🐱 | Dog 🐶 |
-|---|---|---|---|
-| 🥚 **Egg** | 1 | `🥚` | `🥚` |
-| 🐱 **Baby** | 2–3 | `🐱` | `🐶` |
-| 🐈 **Junior** | 4–6 | `🐈‍⬛` | `🐕` |
-| 🐈 **Adult** | 7–9 | `🐈` | `🦮` |
-| ✨ **Legend** | 10+ | `✨🐈‍⬛✨` | `✨🐕‍🦺✨` |
-
-**How XP works:** cats earn more XP per task but lose mood faster when they miss one. Dogs earn slightly less XP but are more forgiving on mood, though they take more health damage.
-
-| Pet | High priority | Medium priority | Low priority |
-|---|---:|---:|---:|
-| 🐱 Cat XP | +30 | +20 | +10 |
-| 🐶 Dog XP | +25 | +15 | +8 |
-
-> Each pet starts with **Health 80 · Mood 70 · Level 1 · 0 coins**. Health and mood are clamped between 0–100, and coins can never go below 0.
-
----
-
-## 😺 Mood System
-
-Your pet's mood is a 0–100 value that maps to one of four states:
-
-| Mood value | State | Emoji | Effect |
-|---|---|---|---|
-| 70–100 | Happy | `🐾✨` | Positive greetings and happy animation state |
-| 40–69 | Neutral | `🐾` | Calm, waiting behavior |
-| 20–39 | Sad | `😿` / `🥺` | Sad expression and sad animation state |
-| 0–19 | Sick | `🤒` | Urgent state — complete tasks or buy helpful items |
-
-### Task Effects
-
-| Event | Cat 🐱 | Dog 🐶 |
-|---|---|---|
-| Complete high task | +30 XP, +15 Mood, +5 Health, +15 Coins | +25 XP, +20 Mood, +8 Health, +12 Coins |
-| Complete medium task | +20 XP, +15 Mood, +5 Health, +10 Coins | +15 XP, +20 Mood, +8 Health, +7 Coins |
-| Complete low task | +10 XP, +15 Mood, +5 Health, +5 Coins | +8 XP, +20 Mood, +8 Health, +4 Coins |
-| Miss overdue task | −20 Mood, −8 Health | −12 Mood, −10 Health |
-
-Overdue penalties are applied only once per task using `TaskItem.OverduePenaltyApplied`.
-
----
-
-## 🎮 Features
-
-| Feature | Status |
-|---|:---:|
-| Login with username and pet name | ✅ |
-| Multi-profile support | ✅ |
-| Choose Cat 🐱 or Dog 🐶 | ✅ |
-| Add, edit, delete, and complete tasks | ✅ |
-| Task priority and due-date tracking | ✅ |
-| Complete tasks → pet gains XP, mood, health, and coins | ✅ |
-| Overdue tasks → pet loses health and mood once per overdue task | ✅ |
-| Pet levels up and evolves | ✅ |
-| Animated cat and dog pet drawings | ✅ |
-| Speech bubbles based on mood | ✅ |
-| Task completion animations | ✅ |
-| XP, mood, health, and coin floating animations | ✅ |
-| Shop item purchase animations | ✅ |
-| Coin-based shop system | ✅ |
-| Daily streak tracking | ✅ |
-| Productivity stats and analytics screen | ✅ |
-| Settings form with switchable themes | ✅ |
-| Theme persistence across sessions | ✅ |
-| Data persistence across sessions | ✅ |
-| Atomic save writes | ✅ |
-
----
-
 ## 🎓 OOP Principles
 
-Pawductivity is built as a deliberate showcase of the four core OOP concepts.
+Pawductivity demonstrates all four core OOP concepts deliberately and practically.
 
 ### 🔒 Encapsulation — `Pet.cs`
 
-`Pet` protects its core stats with private backing fields:
-
-```csharp
-private int _health;
-private int _mood;
-private int _xp;
-private int _level;
-private int _coins;
-```
-
-Public properties enforce rules whenever values change:
+Core stats are protected with private backing fields. Public properties enforce rules on every write:
 
 ```csharp
 public int Health
 {
     get => _health;
-    set => _health = Math.Clamp(value, 0, 100);
+    set => _health = Math.Clamp(value, 0, 100);  // always within bounds
 }
 
 public int XP
 {
     get => _xp;
-    set { _xp = value; CheckLevelUp(); }
+    set { _xp = value; CheckLevelUp(); }          // auto level-up check
 }
 
 public int Coins
 {
     get => _coins;
-    set => _coins = Math.Max(0, value);
+    set => _coins = Math.Max(0, value);            // never negative
 }
 ```
 
-This keeps health and mood between 0–100, prevents negative coins, and automatically checks for level-ups whenever XP changes.
-
 ### 🧬 Inheritance — `Pet.cs` → `CatPet` / `DogPet`
 
-`Pet` is an abstract base class. It owns shared pet data, mood calculation, level-up logic, evolution, starting stats, and persistence restoration.
+`Pet` is an abstract base class that owns shared data, mood calculation, level-up logic, evolution stages, and save/restore logic. `CatPet` and `DogPet` inherit everything and add their own behavior.
 
 ```csharp
 public abstract class Pet { ... }
@@ -314,11 +294,9 @@ public class CatPet : Pet { ... }
 public class DogPet : Pet { ... }
 ```
 
-`CatPet` and `DogPet` inherit the shared system, then define their own rewards, penalties, greetings, and stage emojis.
-
 ### 🔀 Polymorphism — `PetTypes.cs`
 
-`Pet` requires each subclass to implement its own reactions:
+Abstract methods ensure each subclass reacts in its own way. `GameManager` calls the same method regardless of pet type:
 
 ```csharp
 public abstract void ReactToTaskCompleted(TaskItem task);
@@ -326,41 +304,32 @@ public abstract void ReactToTaskMissed();
 public abstract string GetGreeting();
 ```
 
-The same call produces different behavior depending on whether the current pet is a cat or dog. `GameManager` can call `Pet.ReactToTaskCompleted(task)` without needing separate UI code for each pet type.
+### 🏗️ Abstraction — `GameManager.cs`, `SaveManager.cs`, `PetAnimationControl.cs`
 
-### 🏗️ Abstraction — `GameManager.cs`, `PetAnimationControl.cs`, `SaveManager.cs`
-
-`GameManager` hides the rules for completing tasks, applying overdue penalties, buying items, updating streaks, and calculating stat changes. Forms call simple methods such as:
+Forms call simple, expressive methods without knowing the internal rules:
 
 ```csharp
-var change = _gm.CompleteTask(task.Id);
-var overdue = _gm.ApplyOverduePenalties();
+var change   = _gm.CompleteTask(task.Id);
+var overdue  = _gm.ApplyOverduePenalties();
 var purchase = _gm.BuyItem(item);
 ```
 
-Those methods return `PetChangeResult`, which tells the UI exactly what changed. `PetAnimationControl` then turns those changes into animations without duplicating game logic.
-
-Persistence is abstracted too. Forms call `SaveManager.Save(_gm)` and `SaveManager.Restore(data)` without knowing about JSON, app data folders, temp files, or atomic writes.
+Each method returns a `PetChangeResult` that tells the UI exactly what changed — keeping game logic out of the forms entirely. Save/load is similarly hidden behind `SaveManager.Save(_gm)` and `SaveManager.Restore(data)`.
 
 ---
 
 ## 🌸 Theming
 
-Theme palettes live in `PawTheme.cs` and use the `AppTheme` model. `PawTheme.SetTheme(...)` changes the active palette, and new/rebuilt forms read their colors from the active theme.
+Theme palettes live in `PawTheme.cs`. `PawTheme.SetTheme(...)` updates the active palette, and forms read colors from static properties:
 
 ```csharp
 public static Color Background => _activeTheme.Background;
-public static Color Surface    => _activeTheme.Surface;
 public static Color Primary    => _activeTheme.Primary;
-public static Color Secondary  => _activeTheme.Secondary;
-public static Color TextDark   => _activeTheme.TextDark;
-public static Color TextMuted  => _activeTheme.TextMuted;
-public static Color HealthBar  => _activeTheme.HealthBar;
-public static Color MoodBar    => _activeTheme.MoodBar;
-public static Color XpBar      => _activeTheme.XpBar;
+public static Color Surface    => _activeTheme.Surface;
+// ...
 ```
 
-`PawTheme.StyleButton(btn)` and `PawTheme.StyleButton(btn, outlined: true)` apply consistent styling and hover behavior from one helper method.
+`PawTheme.StyleButton(btn)` and `PawTheme.StyleButton(btn, outlined: true)` apply consistent button styling and hover behavior from a single helper.
 
 ---
 
