@@ -61,6 +61,9 @@ Pawductivity/
 ├── Program.cs                     ← Entry point
 ├── PawTheme.cs                    ← Theme system, palettes, fonts, button styles
 │
+├── Assets/                        ← images, sprites, icons, sounds
+│   └── startup_bg.png             ← background for StartupForm
+│
 ├── Animations/
 │   ├── PetAnimationState.cs       ← Pet animation state enum
 │   └── PetRenderer.cs             ← Cat, dog, speech bubble, and drawing helpers
