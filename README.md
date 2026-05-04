@@ -40,7 +40,7 @@ It's a productivity tool with stakes — and a little companion watching your pr
 
 ### Pet Animation
 
-![Pet Animation GIF](docs/images/pet-animation.gif)
+![Pet Animation GIF](docs/images/pet-animation.gif) 
 
 ### Theme Switching
 
