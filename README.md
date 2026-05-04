@@ -38,10 +38,6 @@ It's a productivity tool with stakes — and a little companion watching your pr
 
 ![Dashboard Preview](docs/images/dashboard-preview.png)
 
-### Pet Animation
-
-![Pet Animation GIF](docs/images/pet-animation-go.gif) 
-
 ### Theme Switching
 
 ![Theme Switching GIF](docs/images/theme-switching.gif)
@@ -190,6 +186,10 @@ Coins are earned by completing tasks (`XP gained ÷ 2` per task). Spend them in 
 ---
 
 ## 🌱 Pet Evolution
+
+<div align="center">
+
+![Pet Evolution Demo](docs/images/pet-animation-go.gif)
 
 Your pet evolves through five stages as you level up. Each level costs `current_level × 50 XP`, so leveling gets progressively harder.
 
