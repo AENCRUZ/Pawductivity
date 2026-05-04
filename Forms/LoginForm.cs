@@ -1,8 +1,9 @@
-﻿using Pawductivity.Managers;
+using Pawductivity.Managers;
 using Pawductivity.Models;
 using Pawductivity.Persistence;
 
 namespace Pawductivity.Forms;
+
 public class LoginForm : Form
 {
     // ── Widgets ──────────────────────────────────────────────────────
@@ -41,6 +42,16 @@ public class LoginForm : Form
     private const int FormH_Compact = ToggleBtnY + BtnH + 46;
     private const int FormH_Expanded = NewCardY + NewCardH + 36;
 
+
+    private static readonly Color LF_Background = Color.FromArgb(255, 240, 245);
+    private static readonly Color LF_Surface = Color.FromArgb(255, 220, 230);
+    private static readonly Color LF_Primary = Color.FromArgb(255, 105, 150);
+    private static readonly Color LF_PrimaryHover = Color.FromArgb(240, 85, 130);
+    private static readonly Color LF_Secondary = Color.FromArgb(255, 182, 193);
+    private static readonly Color LF_TextDark = Color.FromArgb(80, 30, 50);
+    private static readonly Color LF_TextMuted = Color.FromArgb(160, 90, 120);
+    private static readonly Color LF_CardBorder = Color.FromArgb(255, 150, 200);
+
     public LoginForm()
     {
         InitializeComponent();
@@ -55,7 +66,7 @@ public class LoginForm : Form
         StartPosition = FormStartPosition.CenterScreen;
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
-        BackColor = Color.FromArgb(255, 240, 245);
+        BackColor = LF_Background;
         Font = PawTheme.FontBody;
 
         // ── Emoji ────────────────────────────────────────────────────
@@ -75,7 +86,7 @@ public class LoginForm : Form
         {
             Text = "Pawductivity",
             Font = PawTheme.FontTitle,
-            ForeColor = Color.FromArgb(255, 105, 150),
+            ForeColor = LF_Primary,
             AutoSize = false,
             Size = new Size(420, TitleH),
             Location = new Point(0, TitleY),
@@ -88,7 +99,7 @@ public class LoginForm : Form
         {
             Text = "Stay productive. Keep your pet happy! 💕",
             Font = PawTheme.FontSmall,
-            ForeColor = Color.FromArgb(160, 90, 120),
+            ForeColor = LF_TextMuted,
             AutoSize = false,
             Size = new Size(420, TagH),
             Location = new Point(0, TagY),
@@ -101,7 +112,7 @@ public class LoginForm : Form
         {
             Location = new Point(CardX, ReturnCardY),
             Size = new Size(CardW, ReturnCardH),
-            BackColor = Color.FromArgb(255, 220, 230),
+            BackColor = LF_Surface,
         };
         cardReturn.Paint += PaintCardBorder;
 
@@ -109,7 +120,7 @@ public class LoginForm : Form
         {
             Text = "Welcome! 🐱",
             Font = new Font("Segoe UI", 10f, FontStyle.Bold),
-            ForeColor = Color.FromArgb(255, 105, 150),
+            ForeColor = LF_Primary,
             AutoSize = true,
             Location = new Point(14, 14),
             BackColor = Color.Transparent,
@@ -122,8 +133,8 @@ public class LoginForm : Form
             Location = new Point(14, 58),
             Size = new Size(CardW - 28, 28),
             DropDownStyle = ComboBoxStyle.DropDownList,
-            BackColor = Color.FromArgb(255, 240, 245),
-            ForeColor = PawTheme.TextDark,
+            BackColor = LF_Background,
+            ForeColor = LF_TextDark,
             Font = new Font("Segoe UI", 9f, FontStyle.Regular),
         };
 
@@ -133,7 +144,7 @@ public class LoginForm : Form
             Location = new Point(14, 100),
             Size = new Size(160, BtnH),
         };
-        PawTheme.StyleButton(_btnContinue);
+        StyleLoginButton(_btnContinue);
         _btnContinue.Click += BtnContinue_Click;
 
         _btnDelete = new Button
@@ -142,7 +153,7 @@ public class LoginForm : Form
             Location = new Point(198, 100),
             Size = new Size(160, BtnH),
         };
-        PawTheme.StyleButton(_btnDelete, outlined: true);
+        StyleLoginButton(_btnDelete, outlined: true);
         _btnDelete.Click += BtnDelete_Click;
 
         cardReturn.Controls.AddRange([lblWelcome, lblPick, _cboProfiles, _btnContinue, _btnDelete]);
@@ -154,7 +165,7 @@ public class LoginForm : Form
             Location = new Point(CardX, ToggleBtnY),
             Size = new Size(CardW, BtnH),
         };
-        PawTheme.StyleButton(_btnNewToggle, outlined: true);
+        StyleLoginButton(_btnNewToggle, outlined: true);
         _btnNewToggle.Click += BtnNewToggle_Click;
 
         // ── New-profile card (hidden by default) ──────────────────────
@@ -162,7 +173,7 @@ public class LoginForm : Form
         {
             Location = new Point(CardX, NewCardY),
             Size = new Size(CardW, NewCardH),
-            BackColor = Color.FromArgb(255, 220, 230),
+            BackColor = LF_Surface,
             Visible = false,
         };
         _pnlNew.Paint += PaintCardBorder;
@@ -171,7 +182,7 @@ public class LoginForm : Form
         {
             Text = "Create your profile ✨",
             Font = new Font("Segoe UI", 10f, FontStyle.Bold),
-            ForeColor = Color.FromArgb(255, 105, 150),
+            ForeColor = LF_Primary,
             AutoSize = true,
             Location = new Point(14, 14),
             BackColor = Color.Transparent,
@@ -191,8 +202,8 @@ public class LoginForm : Form
             Location = new Point(14, 180),
             Size = new Size(CardW - 28, 28),
             DropDownStyle = ComboBoxStyle.DropDownList,
-            BackColor = Color.FromArgb(255, 240, 245),
-            ForeColor = Color.FromArgb(80, 30, 50),
+            BackColor = LF_Background,
+            ForeColor = LF_TextDark,
             Font = PawTheme.FontBody,
         };
         _cboPetType.Items.AddRange(["🐱 Cat — earns XP faster!", "🐶 Dog — more forgiving!"]);
@@ -204,7 +215,7 @@ public class LoginForm : Form
             Location = new Point(14, 220),
             Size = new Size(160, BtnH),
         };
-        PawTheme.StyleButton(_btnStart);
+        StyleLoginButton(_btnStart);
         _btnStart.Click += BtnStart_Click;
 
         _btnCancel = new Button
@@ -213,7 +224,7 @@ public class LoginForm : Form
             Location = new Point(198, 220),
             Size = new Size(160, BtnH),
         };
-        PawTheme.StyleButton(_btnCancel, outlined: true);
+        StyleLoginButton(_btnCancel, outlined: true);
         _btnCancel.Click += (s, e) => CollapseNewPanel();
 
         _pnlNew.Controls.AddRange([
@@ -225,6 +236,28 @@ public class LoginForm : Form
         ]);
 
         Controls.AddRange([lblEmoji, lblTitle, lblTag, cardReturn, _btnNewToggle, _pnlNew]);
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // LOGIN-FORM-ONLY BUTTON STYLING
+    // Uses the LF_* hardcoded palette so PawTheme changes never bleed in.
+    // ─────────────────────────────────────────────────────────────────
+    private static void StyleLoginButton(Button btn, bool outlined = false)
+    {
+        btn.FlatStyle = FlatStyle.Flat;
+        btn.FlatAppearance.BorderColor = LF_Primary;
+        btn.FlatAppearance.BorderSize = outlined ? 2 : 0;
+        btn.BackColor = outlined ? LF_Surface : LF_Primary;
+        btn.ForeColor = outlined ? LF_Primary : Color.White;
+        btn.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
+        btn.Cursor = Cursors.Hand;
+        btn.Height = BtnH;
+
+        Color normalBack = outlined ? LF_Surface : LF_Primary;
+        Color hoverBack = outlined ? LF_Secondary : LF_PrimaryHover;
+
+        btn.MouseEnter += (s, e) => btn.BackColor = hoverBack;
+        btn.MouseLeave += (s, e) => btn.BackColor = normalBack;
     }
 
     // ─────────────────────────────────────────────────────────────────
@@ -258,16 +291,16 @@ public class LoginForm : Form
     {
         _pnlNew.Visible = true;
         _btnNewToggle.Text = "↩  Back to profiles";
-        ClientSize = new Size(420, FormH_Expanded);
         MinimumSize = new Size(420, FormH_Expanded);
+        ClientSize = new Size(420, FormH_Expanded);
     }
 
     private void CollapseNewPanel()
     {
         _pnlNew.Visible = false;
         _btnNewToggle.Text = "+ New Profile";
-        ClientSize = new Size(420, FormH_Compact);
         MinimumSize = new Size(420, FormH_Compact);
+        ClientSize = new Size(420, FormH_Compact);
         _txtUsername.Clear();
         _txtPetName.Clear();
         _cboPetType.SelectedIndex = 0;
@@ -358,7 +391,7 @@ public class LoginForm : Form
     {
         Text = text,
         Font = new Font("Segoe UI", 8.5f, FontStyle.Bold),
-        ForeColor = Color.FromArgb(160, 90, 120),
+        ForeColor = LF_TextMuted,
         AutoSize = true,
         Location = loc,
         BackColor = Color.Transparent,
@@ -369,8 +402,8 @@ public class LoginForm : Form
         Location = loc,
         Width = width,
         Height = 28,
-        BackColor = Color.FromArgb(255, 240, 245),
-        ForeColor = Color.FromArgb(80, 30, 50),
+        BackColor = LF_Background,
+        ForeColor = LF_TextDark,
         BorderStyle = BorderStyle.FixedSingle,
         Font = PawTheme.FontBody,
     };
@@ -378,7 +411,7 @@ public class LoginForm : Form
     private static void PaintCardBorder(object? sender, PaintEventArgs e)
     {
         if (sender is not Panel p) return;
-        using var pen = new Pen(PawTheme.CardBorder, 2f);
+        using var pen = new Pen(LF_CardBorder, 2f);
         e.Graphics.DrawRectangle(pen, 0, 0, p.Width - 1, p.Height - 1);
     }
 }
