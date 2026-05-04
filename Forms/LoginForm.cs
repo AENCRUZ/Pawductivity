@@ -230,7 +230,7 @@ public class LoginForm : Form
     // ─────────────────────────────────────────────────────────────────
     // PROFILE MANAGEMENT
     // ─────────────────────────────────────────────────────────────────
-    private void LoadProfiles()
+    public void LoadProfiles()
     {
         _cboProfiles.Items.Clear();
         var profiles = SaveManager.ListProfiles();
