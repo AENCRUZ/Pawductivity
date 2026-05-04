@@ -281,15 +281,6 @@ Coins are earned by completing tasks (`XP gained ÷ 2`). Spend them to restore y
 
 </div>
 
-Theme palettes live in `PawTheme.cs`. `PawTheme.SetTheme(...)` updates the active palette, and forms read colors from static properties:
-
-```csharp
-public static Color Background => _activeTheme.Background;
-public static Color Primary    => _activeTheme.Primary;
-public static Color Surface    => _activeTheme.Surface;
-// ...
-
-```
 Open settings via the `⚙` button in the top bar to switch themes instantly. Each profile saves its own theme selection.
 
 | Theme | Style |
