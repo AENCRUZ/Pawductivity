@@ -682,7 +682,6 @@ internal static class PetRenderer
         }
         else if (sad)
         {
-            // same eyes as neutral
             var eyeColor = Color.FromArgb(80, 50, isDog ? 20 : 50);
             using var eyeBrush = new SolidBrush(eyeColor);
             g.FillEllipse(eyeBrush, cx - ex - 6, eyeY - 4, 12, 11);
@@ -691,7 +690,6 @@ internal static class PetRenderer
             g.FillEllipse(shineBrush, cx - ex - 3, eyeY - 2, 4, 4);
             g.FillEllipse(shineBrush, cx + ex - 3, eyeY - 2, 4, 4);
 
-            // sad eyebrows angled down toward the middle ↘ ↙
             using var browPen = new Pen(eyeColor, 2f)
             {
                 StartCap = System.Drawing.Drawing2D.LineCap.Round,
