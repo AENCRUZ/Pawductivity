@@ -1,4 +1,4 @@
-﻿using Pawductivity.Models;
+using Pawductivity.Models;
 
 namespace Pawductivity.Animations;
 
@@ -763,5 +763,37 @@ internal static class PetRenderer
         path.AddBezier(x, y, x - size, y - size, x - size * 2, y + size / 2, x, y + size * 2);
         path.AddBezier(x, y + size * 2, x + size * 2, y + size / 2, x + size, y - size, x, y);
         g.FillPath(brush, path);
+    }
+
+    internal static void DrawThermometer(Graphics g, int cx, int cy, int frame)
+    {
+        float hoverOffset = (float)Math.Sin(frame * Math.PI / 2) * 4f;
+        int tx = cx + 32;
+        int ty = cy - 40 + (int)hoverOffset;
+
+        using var glassBrush = new SolidBrush(Color.FromArgb(220, 240, 250));
+        using var glassPen = new Pen(Color.FromArgb(140, 180, 210), 1.5f);
+        var tubeRect = new Rectangle(tx - 4, ty, 8, 36);
+        g.FillRectangle(glassBrush, tubeRect);
+        g.DrawRectangle(glassPen, tubeRect);
+
+        g.FillEllipse(glassBrush, tx - 6, ty + 34, 12, 12);
+        g.DrawEllipse(glassPen, tx - 6, ty + 34, 12, 12);
+
+        int fillHeight = 18 + (frame % 3) * 2;
+        using var mercuryBrush = new SolidBrush(Color.FromArgb(220, 200, 60, 60));
+        g.FillRectangle(mercuryBrush, tx - 2, ty + 38 - fillHeight, 4, fillHeight);
+
+        g.FillEllipse(mercuryBrush, tx - 4, ty + 36, 8, 8);
+
+        using var markPen = new Pen(Color.FromArgb(100, 140, 180), 1f);
+        for (int i = 0; i < 4; i++)
+        {
+            int my = ty + 6 + i * 8;
+            g.DrawLine(markPen, tx + 4, my, tx + 7, my);
+        }
+
+        using var highlightPen = new Pen(Color.FromArgb(80, 255, 255, 255), 1f);
+        g.DrawLine(highlightPen, tx - 3, ty + 2, tx - 3, ty + 34);
     }
 }
