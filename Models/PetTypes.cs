@@ -7,13 +7,17 @@ public class CatPet : Pet
 
     public override void ReactToTaskCompleted(TaskItem task)
     {
-        int xp     = task.Priority switch { TaskPriority.High => 30, TaskPriority.Medium => 20, _ => 10 };
+        int xp = task.Priority switch { TaskPriority.High => 30, TaskPriority.Medium => 20, _ => 10 };
         int moodUp = 15;
 
-        XP     += xp;
-        Mood   += moodUp;
-        Health += 5;
-        Coins  += xp / 2;
+        // ← ADD THIS — no XP while sick, but still reward coins as motivation
+        if (!IsSick)
+        {
+            XP += xp;
+            Mood += moodUp;
+        }
+        Health += 5;   // completing tasks always restores a little health
+        Coins += xp / 2;
     }
 
     public override void ReactToTaskMissed()
