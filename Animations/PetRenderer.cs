@@ -574,6 +574,8 @@ internal static class PetRenderer
         g.FillEllipse(earBrush, cx - 42, cy - 36 + earFlap, 20, 34);
         g.FillEllipse(earBrush, cx + 22, cy - 36 - earFlap, 20, 34);
 
+        DrawFace(g, cx, cy - 24, happy, sad, blinking, 11, true);
+
         // Snout
         using var snoutBrush = new SolidBrush(Color.FromArgb(255, 225, 195));
         g.FillEllipse(snoutBrush, cx - 14, cy - 18, 28, 20);
@@ -582,7 +584,6 @@ internal static class PetRenderer
         using var noseShineBrush = new SolidBrush(Color.FromArgb(120, 255, 255, 255));
         g.FillEllipse(noseShineBrush, cx - 4, cy - 16, 5, 4);
 
-        DrawFace(g, cx, cy - 24, happy, sad, blinking, 11, true);
 
         if (happy && frame % 2 == 0)
         {
@@ -681,9 +682,23 @@ internal static class PetRenderer
         }
         else if (sad)
         {
-            using var eyePen = new Pen(Color.FromArgb(80, 50, isDog ? 20 : 50), 2.5f);
-            g.DrawEllipse(eyePen, cx - ex - 5, eyeY - 4, 11, 10);
-            g.DrawEllipse(eyePen, cx + ex - 6, eyeY - 4, 11, 10);
+            // same eyes as neutral
+            var eyeColor = Color.FromArgb(80, 50, isDog ? 20 : 50);
+            using var eyeBrush = new SolidBrush(eyeColor);
+            g.FillEllipse(eyeBrush, cx - ex - 6, eyeY - 4, 12, 11);
+            g.FillEllipse(eyeBrush, cx + ex - 6, eyeY - 4, 12, 11);
+            using var shineBrush = new SolidBrush(Color.White);
+            g.FillEllipse(shineBrush, cx - ex - 3, eyeY - 2, 4, 4);
+            g.FillEllipse(shineBrush, cx + ex - 3, eyeY - 2, 4, 4);
+
+            // sad eyebrows angled down toward the middle ↘ ↙
+            using var browPen = new Pen(eyeColor, 2f)
+            {
+                StartCap = System.Drawing.Drawing2D.LineCap.Round,
+                EndCap = System.Drawing.Drawing2D.LineCap.Round
+            };
+            g.DrawArc(browPen, cx - ex - 8, eyeY - 12, 12, 8, 0, 180);
+            g.DrawArc(browPen, cx + ex - 4, eyeY - 12, 12, 8, 0, 180);
         }
         else
         {
