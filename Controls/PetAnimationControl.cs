@@ -1,4 +1,4 @@
-﻿using Pawductivity.Animations;
+using Pawductivity.Animations;
 using Pawductivity.Managers;
 using Pawductivity.Models;
 
@@ -30,6 +30,8 @@ public class PetAnimationControl : PictureBox
     private static readonly string[] DogHappy  = ["Woof! 🐾", "WOOF WOOF!!", "*tail wags*", "Bork bork!", "Arf arf! 💛", "Hewwo!! 🐕"];
     private static readonly string[] DogIdle   = ["Woof?", "*sniffs*", "Bork?", "*yawns*", "Arf?", "*tilts head*"];
     private static readonly string[] DogSad    = ["Awoo... 😢", "*whines*", "Woof... 💧", "Arf... 😞"];
+    private static readonly string[] CatSick = ["I feel awful... 🤒", "*coughs*", "Help me... 💊", "So dizzy..."];
+    private static readonly string[] DogSick = ["I'm not well... 🤒", "*whimpers*", "Woof... 💊", "Feel bad..."];
     private static readonly Random _rng = new();
 
     public PetAnimationControl(GameManager gm)
@@ -123,6 +125,7 @@ public class PetAnimationControl : PictureBox
         var stage = _gm.Pet.Stage;
         bool blinking = _isBlinking;
 
+        bool isSick = _petState == PetAnimationState.Sick;
         if (isCat) PetRenderer.DrawCat(g, cx, cy, isHappy, isSad, _petFrame, stage, blinking);
         else       PetRenderer.DrawDog(g, cx, cy, isHappy, isSad, _petFrame, stage, blinking);
 
@@ -159,7 +162,7 @@ public class PetAnimationControl : PictureBox
         {
             PetMood.Happy => PetAnimationState.Happy,
             PetMood.Sad   => PetAnimationState.Sad,
-            PetMood.Sick  => PetAnimationState.Sad,
+            PetMood.Sick  => PetAnimationState.Sick,
             _             => PetAnimationState.Idle,
         };
 
@@ -191,12 +194,12 @@ public class PetAnimationControl : PictureBox
         bool isCat = _gm.Pet is CatPet;
         string[] pool = (_petState, isCat) switch
         {
-            (PetAnimationState.Happy, true)  => CatHappy,
-            (PetAnimationState.Sad,   true)  => CatSad,
-            (_,                       true)  => CatIdle,
+            (PetAnimationState.Happy, true) => CatHappy,
+            (PetAnimationState.Sad, true) => CatSad,
+            (_, true) => _gm.Pet.IsSick ? CatSick : CatIdle,  // ← change
             (PetAnimationState.Happy, false) => DogHappy,
-            (PetAnimationState.Sad,   false) => DogSad,
-            _                                => DogIdle,
+            (PetAnimationState.Sad, false) => DogSad,
+            _ => _gm.Pet.IsSick ? DogSick : DogIdle,  // ← change
         };
         _bubbleText = pool[_rng.Next(pool.Length)];
         _bubbleVisible = 18;
