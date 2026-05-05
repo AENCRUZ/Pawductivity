@@ -75,7 +75,7 @@ public class DashboardForm : Form
     {
         Text = "Pawductivity 🐾 — Dashboard";
         MinimumSize = new Size(970, 790);
-        ClientSize  = new Size(970, 790);
+        ClientSize = new Size(970, 790);
         Size = new Size(930, 650);
         StartPosition = FormStartPosition.CenterScreen;
         BackColor = PawTheme.Background;
@@ -338,13 +338,13 @@ public class DashboardForm : Form
         e.DrawDefault = false;
         if (e.Item?.Tag is not TaskItem task) return;
 
-        bool sel  = (e.State & ListViewItemStates.Selected) != 0;
-        bool hot  = (e.State & ListViewItemStates.Hot)      != 0;
+        bool sel = (e.State & ListViewItemStates.Selected) != 0;
+        bool hot = (e.State & ListViewItemStates.Hot) != 0;
 
-        Color bg = sel  ? PawTheme.Secondary :
-                   hot  ? Color.FromArgb(255, 235, 245) :   // soft hover tint
+        Color bg = sel ? PawTheme.Secondary :
+                   hot ? Color.FromArgb(255, 235, 245) :   // soft hover tint
                    task.IsCompleted ? PawTheme.CompletedTask :
-                   task.IsOverdue   ? PawTheme.OverdueTask :
+                   task.IsOverdue ? PawTheme.OverdueTask :
                                       _lvTasks.BackColor;
 
         using var brush = new SolidBrush(bg);
@@ -356,11 +356,11 @@ public class DashboardForm : Form
         if (e.Item?.Tag is not TaskItem task) return;
 
         bool sel = (e.ItemState & ListViewItemStates.Selected) != 0;
-        bool hot = (e.ItemState & ListViewItemStates.Hot)      != 0;
+        bool hot = (e.ItemState & ListViewItemStates.Hot) != 0;
 
         // Always use a visible foreground regardless of hover/selection state
-        Color fg = sel                ? PawTheme.TextDark :
-                   task.IsCompleted  ? PawTheme.TextGreen :
+        Color fg = sel ? PawTheme.TextDark :
+                   task.IsCompleted ? PawTheme.TextGreen :
                                        PawTheme.TextDark;
 
         var flags = TextFormatFlags.Left | TextFormatFlags.VerticalCenter |
@@ -435,7 +435,7 @@ public class DashboardForm : Form
         _pbHealth.Value = pet.Health;
         if (pet.IsSick)
         {
-            _lblGreeting.Text = "⚠️ Your pet is sick! Complete tasks to recover.";
+            _lblGreeting.Text = "⚠️ Sick! Complete tasks to recover.";
             _lblGreeting.ForeColor = Color.FromArgb(200, 60, 60);
             _lblLevel.Text = $"Lv.{pet.Level} • ❌ XP locked while sick";
         }
