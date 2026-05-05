@@ -13,7 +13,8 @@ public class TaskItem
     public DateTime?    CompletedAt { get; set; }
     public bool         OverduePenaltyApplied { get; set; } = false;
 
-    public bool IsOverdue => !IsCompleted && DueDate.Date <= DateTime.Today;
+    public bool IsOverdue => !IsCompleted && DueDate.Date < DateTime.Today;
+    public bool WasOverdue { get; private set; }
 
     public string PriorityEmoji => Priority switch
     {
@@ -25,6 +26,7 @@ public class TaskItem
 
     public void Complete()
     {
+        WasOverdue = IsOverdue;
         IsCompleted = true;
         CompletedAt = DateTime.Now;
         OverduePenaltyApplied = false;
