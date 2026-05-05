@@ -10,13 +10,20 @@ public class CatPet : Pet
         int xp = task.Priority switch { TaskPriority.High => 30, TaskPriority.Medium => 20, _ => 10 };
         int moodUp = 15;
 
-        // ← ADD THIS — no XP while sick, but still reward coins as motivation
-        if (!IsSick)
+        if (IsXpLocked)
+        {
+            if (task.WasOverdue)
+            {
+                XP += xp;
+                Mood += moodUp;
+            }
+        }
+        else
         {
             XP += xp;
             Mood += moodUp;
         }
-        Health += 5;   // completing tasks always restores a little health
+        Health += 5;
         Coins += xp / 2;
     }
 
@@ -44,10 +51,21 @@ public class DogPet : Pet
     public override void ReactToTaskCompleted(TaskItem task)
     {
         int xp     = task.Priority switch { TaskPriority.High => 25, TaskPriority.Medium => 15, _ => 8 };
-        int moodUp = 20;   // dogs get happy easier
+        int moodUp = 20;
 
-        XP     += xp;
-        Mood   += moodUp;
+        if (IsXpLocked)
+        {
+            if (task.WasOverdue)
+            {
+                XP += xp;
+                Mood += moodUp;
+            }
+        }
+        else
+        {
+            XP += xp;
+            Mood += moodUp;
+        }
         Health += 8;
         Coins  += xp / 2;
     }
