@@ -48,14 +48,16 @@ public abstract class Pet
     }
 
     // ── Derived Properties ───────────────────────────────────────────
-    public bool IsSick => Health == 0;
+    public bool IsSick => Health is >= 0 and <= 19;
+    public bool IsCriticallySick => Health == 0;
+    public bool IsXpLocked => IsCriticallySick;
 
-    public PetMood CurrentMood => IsSick ? PetMood.Sick : Mood switch
+    public PetMood CurrentMood => IsCriticallySick ? PetMood.Sick : IsSick ? PetMood.Sick : Mood switch
     {
         >= 70 => PetMood.Happy,
         >= 40 => PetMood.Neutral,
         >= 20 => PetMood.Sad,
-        _ => PetMood.Sick   // low mood but not dead — just Sick
+        _ => PetMood.Sad   // low mood but not dead — still just Sad
     };
 
     public string MoodEmoji => CurrentMood switch
