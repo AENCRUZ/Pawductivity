@@ -54,8 +54,14 @@ public class DashboardForm : Form
     {
         _gm = gm;
         InitializeComponent();
+
+        var startupPenalty = _gm.ApplyOverduePenalties();
+
         RefreshAll();
         StartDecayTimer();
+
+        if (startupPenalty.Success)
+            _petCanvas.ShowOverduePenalty(startupPenalty);
 
         // ── Save on exit ─────────────────────────────────────────────
         FormClosed += OnFormClosed;
@@ -71,7 +77,7 @@ public class DashboardForm : Form
     {
         Text = "Pawductivity 🐾 — Dashboard";
         MinimumSize = new Size(970, 790);
-        ClientSize  = new Size(970, 790);
+        ClientSize = new Size(970, 790);
         Size = new Size(930, 650);
         StartPosition = FormStartPosition.CenterScreen;
         BackColor = PawTheme.Background;
@@ -100,6 +106,7 @@ public class DashboardForm : Form
         _btnSettings.FlatAppearance.BorderSize = 0;
         _btnSettings.FlatAppearance.MouseOverBackColor = PawTheme.PrimaryHover;
         _btnSettings.Click += (s, e) => new SettingsForm(RebuildForTheme).ShowDialog(this);
+
         var lblApp = new Label
         {
             Text = "🐾 Pawductivity",
@@ -215,6 +222,7 @@ public class DashboardForm : Form
         PawTheme.StyleButton(_btnLogout, outlined: true);
         _btnLogout.ForeColor = Color.FromArgb(180, 60, 60);
         _btnLogout.FlatAppearance.BorderColor = Color.FromArgb(180, 60, 60);
+
         _btnShop.Click += (s, e) => new ShopForm(_gm, OnShopItemPurchased).ShowDialog(this);
         _btnStats.Click += (s, e) => new StatsForm(_gm).ShowDialog(this);
         _btnLogout.Click += BtnLogout_Click;
@@ -234,7 +242,8 @@ public class DashboardForm : Form
             Location = new Point(taskPanelX, panelTop),
             Size = new Size(taskPanelW, petPanelH),
             BackColor = PawTheme.Surface,
-            Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right,
+            Anchor = AnchorStyles.Top | AnchorStyles.Left |
+                     AnchorStyles.Bottom | AnchorStyles.Right,
         };
         taskPanel.Paint += (s, e) => PaintBorder(e, taskPanel);
 
@@ -264,7 +273,7 @@ public class DashboardForm : Form
             Font = PawTheme.FontBody,
             BorderStyle = BorderStyle.None,
             Anchor = AnchorStyles.Top | AnchorStyles.Left |
-                            AnchorStyles.Bottom | AnchorStyles.Right,
+                     AnchorStyles.Bottom | AnchorStyles.Right,
         };
 
         _lvTasks.Columns.Add("", 30);
@@ -334,13 +343,13 @@ public class DashboardForm : Form
         e.DrawDefault = false;
         if (e.Item?.Tag is not TaskItem task) return;
 
-        bool sel  = (e.State & ListViewItemStates.Selected) != 0;
-        bool hot  = (e.State & ListViewItemStates.Hot)      != 0;
+        bool sel = (e.State & ListViewItemStates.Selected) != 0;
+        bool hot = (e.State & ListViewItemStates.Hot) != 0;
 
-        Color bg = sel  ? PawTheme.Secondary :
-                   hot  ? Color.FromArgb(255, 235, 245) :   // soft hover tint
+        Color bg = sel ? PawTheme.Secondary :
+                   hot ? Color.FromArgb(255, 235, 245) :
                    task.IsCompleted ? PawTheme.CompletedTask :
-                   task.IsOverdue   ? PawTheme.OverdueTask :
+                   task.IsOverdue ? PawTheme.OverdueTask :
                                       _lvTasks.BackColor;
 
         using var brush = new SolidBrush(bg);
@@ -352,12 +361,10 @@ public class DashboardForm : Form
         if (e.Item?.Tag is not TaskItem task) return;
 
         bool sel = (e.ItemState & ListViewItemStates.Selected) != 0;
-        bool hot = (e.ItemState & ListViewItemStates.Hot)      != 0;
 
-        // Always use a visible foreground regardless of hover/selection state
-        Color fg = sel                ? PawTheme.TextDark :
-                   task.IsCompleted  ? PawTheme.TextGreen :
-                                       PawTheme.TextDark;
+        Color fg = sel ? PawTheme.TextDark :
+                   task.IsCompleted ? PawTheme.TextGreen :
+                                      PawTheme.TextDark;
 
         var flags = TextFormatFlags.Left | TextFormatFlags.VerticalCenter |
                     TextFormatFlags.EndEllipsis | TextFormatFlags.NoPrefix;
@@ -413,17 +420,17 @@ public class DashboardForm : Form
         }
     }
 
-
     private void OnShopItemPurchased(PetChangeResult change)
     {
         RefreshAll();
         _petCanvas.ShowShopPurchase(change);
     }
+
     // ── REFRESH ──────────────────────────────────────────────────────
     public void RefreshAll()
     {
         var pet = _gm.Pet;
-        _petCanvas.Invalidate();   // trigger repaint with current mood/stage
+        _petCanvas.Invalidate();
         _lblPetName.Text = pet.Name;
         _lblGreeting.Text = pet.GetGreeting();
         _lblLevel.Text = $"Lv.{pet.Level} • Stage: {pet.Stage}";
@@ -475,7 +482,6 @@ public class DashboardForm : Form
         _decayTimer.Stop();
         _petCanvas.StopAnimation();
 
-        // Re-show the LoginForm that was hidden behind us
         foreach (Form f in Application.OpenForms)
         {
             if (f is LoginForm login)
@@ -486,11 +492,9 @@ public class DashboardForm : Form
             }
         }
 
-        // Close just the dashboard (not the whole app)
-        FormClosed -= OnFormClosed;   // prevent double-save / Application.Exit from the close handler
+        FormClosed -= OnFormClosed;
         Close();
     }
-
 
     private void RebuildForTheme()
     {
@@ -507,6 +511,7 @@ public class DashboardForm : Form
         InitializeComponent();
         RefreshAll();
     }
+
     // ── HELPERS ──────────────────────────────────────────────────────
     private static (Label lbl, ProgressBar pb) MakeStatBar(string label, int y, Color color)
     {
