@@ -1,4 +1,4 @@
-﻿using Pawductivity.Models;
+using Pawductivity.Models;
 
 namespace Pawductivity.Managers;
 
@@ -20,6 +20,10 @@ public class GameManager
     /// Not intended for use in UI code.
     public DateTime? LastCompletionDate { get; private set; }
 
+    // tracks the last date we applied overdue penalties.
+    // Persisted via SaveManager so we know if a new day has started.
+    public DateTime? LastPenaltyDate { get; private set; }
+
     public GameManager(Pet pet) => Pet = pet;
 
     // ── Task Operations ──────────────────────────────────────────────
@@ -33,6 +37,8 @@ public class GameManager
         t.Description = desc;
         t.Priority = priority;
         t.DueDate = due;
+        // if the new due date is in the future, reset the penalty flag
+        // so the task can be penalized again if it goes overdue again.
         if (!t.IsOverdue) t.OverduePenaltyApplied = false;
     }
 
@@ -64,6 +70,17 @@ public class GameManager
 
     public PetChangeResult ApplyOverduePenalties()
     {
+        // reset OverduePenaltyApplied for all overdue tasks if a new
+        // calendar day has started since we last applied penalties.
+        // This means a task overdue across multiple days keeps hurting the pet
+        // once per day — not forever on every timer tick.
+        if (LastPenaltyDate.HasValue &&
+            LastPenaltyDate.Value.Date < DateTime.Today)
+        {
+            foreach (var t in Tasks.Where(t => t.IsOverdue))
+                t.OverduePenaltyApplied = false;
+        }
+
         var overdueTasks = Tasks
             .Where(t => t.IsOverdue && !t.OverduePenaltyApplied)
             .ToList();
@@ -78,6 +95,8 @@ public class GameManager
             Pet.ReactToTaskMissed();
             t.OverduePenaltyApplied = true;
         }
+
+        LastPenaltyDate = DateTime.Now;
 
         return new PetChangeResult(
             true,
@@ -118,39 +137,50 @@ public class GameManager
         Tasks.Count == 0 ? 0 : (double)Tasks.Count(t => t.IsCompleted) / Tasks.Count * 100;
 
     // ── Persistence ──────────────────────────────────────────────────
-    /// Injects persisted data after construction. Called only by SaveManager.Restore().
     public void RestoreProgress(
         List<TaskItem> tasks,
         int totalCompleted,
         int currentStreak,
         int longestStreak,
-        DateTime? lastCompletionDate)
+        DateTime? lastCompletionDate,
+        DateTime? lastPenaltyDate = null)   
     {
         Tasks = tasks;
         TotalCompleted = totalCompleted;
         CurrentStreak = currentStreak;
         LongestStreak = longestStreak;
         LastCompletionDate = lastCompletionDate;
+        LastPenaltyDate = lastPenaltyDate;  
     }
 
     // ── Private helpers ──────────────────────────────────────────────
     private int GetTaskXpReward(TaskItem task)
     {
         if (Pet is CatPet)
-            return task.Priority switch { TaskPriority.High => 30, TaskPriority.Medium => 20, _ => 10 };
+            return task.Priority switch
+            {
+                TaskPriority.High => 30,
+                TaskPriority.Medium => 20,
+                _ => 10,
+            };
 
-        return task.Priority switch { TaskPriority.High => 25, TaskPriority.Medium => 15, _ => 8 };
+        return task.Priority switch
+        {
+            TaskPriority.High => 25,
+            TaskPriority.Medium => 15,
+            _ => 8,
+        };
     }
 
     private void UpdateStreak()
     {
         var today = DateTime.Today;
 
-        if (LastCompletionDate == null || LastCompletionDate.Value.Date < today.AddDays(-1))
+        if (LastCompletionDate == null ||
+            LastCompletionDate.Value.Date < today.AddDays(-1))
             CurrentStreak = 1;
         else if (LastCompletionDate.Value.Date == today.AddDays(-1))
             CurrentStreak++;
-        // same day → no change
 
         LastCompletionDate = DateTime.Now;
         if (CurrentStreak > LongestStreak) LongestStreak = CurrentStreak;
