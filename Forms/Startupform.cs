@@ -51,38 +51,56 @@ public class StartupForm : Form
         _btnStart = new Button
         {
             Text = "Start 🐾",
-            Size = new Size(250, 50),
-            Location = new Point(btnX, btnY),
+            Size = new Size(300, 65),
+            Location = new Point(btnX - 29, btnY + 30),
             FlatStyle = FlatStyle.Flat,
             BackColor = Color.FromArgb(255, 105, 150),
             ForeColor = Color.White,
-            Font = new Font("Segoe UI", 15f, FontStyle.Bold),
+            Font = new Font("Comic Sans MS", 17f, FontStyle.Bold),
             Cursor = Cursors.Hand,
+            TextAlign = ContentAlignment.MiddleCenter,
+            Padding = new Padding(0),
         };
-        _btnStart.FlatAppearance.BorderSize = 0;
+        _btnStart.FlatAppearance.BorderSize = 2;
+        _btnStart.FlatAppearance.BorderColor = Color.FromArgb(255, 160, 190);
         _btnStart.MouseEnter += (s, e) =>
+        {
             _btnStart.BackColor = Color.FromArgb(240, 85, 130);
+            _btnStart.FlatAppearance.BorderColor = Color.White;
+        };
         _btnStart.MouseLeave += (s, e) =>
+        {
             _btnStart.BackColor = Color.FromArgb(255, 105, 150);
+            _btnStart.FlatAppearance.BorderColor = Color.FromArgb(255, 160, 190);
+        };
         _btnStart.Click += BtnStart_Click;
 
         // ── Quit button ───────────────────────────────────────────────
         _btnQuit = new Button
         {
             Text = "Quit",
-            Size = new Size(250, 50),
-            Location = new Point(btnX, btnY + 50 + btnGap),
+            Size = new Size(300, 65),
+            Location = new Point(btnX - 29, btnY + 30 + 65 + 20), // 20px gap between buttons
             FlatStyle = FlatStyle.Flat,
-            BackColor = Color.FromArgb(255, 105, 150),
-            ForeColor = Color.White,
-            Font = new Font("Segoe UI", 15f, FontStyle.Bold),
+            BackColor = Color.FromArgb(200, 80, 120),
+            ForeColor = Color.FromArgb(255, 220, 230),
+            Font = new Font("Comic Sans MS", 17f, FontStyle.Bold),
             Cursor = Cursors.Hand,
+            TextAlign = ContentAlignment.MiddleCenter,
+            Padding = new Padding(0),
         };
-        _btnQuit.FlatAppearance.BorderSize = 0;
+        _btnQuit.FlatAppearance.BorderSize = 2;
+        _btnQuit.FlatAppearance.BorderColor = Color.FromArgb(220, 130, 160);
         _btnQuit.MouseEnter += (s, e) =>
-            _btnQuit.BackColor = Color.FromArgb(240, 85, 130);
+        {
+            _btnQuit.BackColor = Color.FromArgb(180, 60, 100);
+            _btnQuit.FlatAppearance.BorderColor = Color.White;
+        };
         _btnQuit.MouseLeave += (s, e) =>
-            _btnQuit.BackColor = Color.FromArgb(255, 105, 150);
+        {
+            _btnQuit.BackColor = Color.FromArgb(200, 80, 120);
+            _btnQuit.FlatAppearance.BorderColor = Color.FromArgb(220, 130, 160);
+        };
         _btnQuit.Click += (s, e) => Application.Exit();
 
         // ── Tip label ─────────────────────────────────────────────────
