@@ -437,7 +437,8 @@ public class DashboardForm : Form
         {
             _lblGreeting.Text = "⚠️ Sick! Complete tasks to recover.";
             _lblGreeting.ForeColor = Color.FromArgb(200, 60, 60);
-            _lblLevel.Text = $"Lv.{pet.Level} • ❌ XP locked while sick";
+            if (pet.IsCriticallySick)
+                _lblLevel.Text = $"Lv.{pet.Level} • ❌ XP locked";
         }
         else
         {
