@@ -1,4 +1,4 @@
-﻿namespace Pawductivity.Models;
+namespace Pawductivity.Models;
 
 public enum TaskPriority { Low, Medium, High }
 
@@ -13,7 +13,7 @@ public class TaskItem
     public DateTime?    CompletedAt { get; set; }
     public bool         OverduePenaltyApplied { get; set; } = false;
 
-    public bool IsOverdue => !IsCompleted && DueDate.Date < DateTime.Today;
+    public bool IsOverdue => !IsCompleted && DueDate.Date <= DateTime.Today;
 
     public string PriorityEmoji => Priority switch
     {
