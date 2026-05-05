@@ -24,6 +24,14 @@ public class PetAnimationControl : PictureBox
     private int _bubbleVisible;
     private ShopItemEffect? _shopEffect;
 
+    // NEW: Shop animation upgrade fields
+    private ItemFlightEffect? _itemFlight;
+    private AccessoryOverlayEffect? _accessoryOverlay;
+    private List<BurstParticle> _burstParticles = [];
+    private bool _isJumping;
+    private int _jumpTick;
+    private int _coinDeductAlpha;
+
     private static readonly string[] CatHappy  = ["Purrrr~ 💜", "Meow! ✨", "Mrrrow~", "*purring*", "Nyaa~ 🎵", "Purrfect! 💜"];
     private static readonly string[] CatIdle   = ["Meow?", "...zzzz", "*yawns*", "Mrrp?", "*stares*", "Mew~"];
     private static readonly string[] CatSad    = ["Mrrrow... 😢", "*whimpers*", "Mew... 💧", "Nyo... 😿"];
@@ -33,6 +41,10 @@ public class PetAnimationControl : PictureBox
     private static readonly string[] CatSick = ["I feel awful... 🤒", "*coughs*", "Help me... 💊", "So dizzy..."];
     private static readonly string[] DogSick = ["I'm not well... 🤒", "*whimpers*", "Woof... 💊", "Feel bad..."];
     private static readonly Random _rng = new();
+
+    // NEW: Item categorization
+    private static readonly HashSet<string> FoodItems = ["Star Cookie", "Strawberry Milk"];
+    private static readonly HashSet<string> WearableItems = ["Pink Ribbon", "Flower Crown"];
 
     public PetAnimationControl(GameManager gm)
     {
@@ -64,7 +76,7 @@ public class PetAnimationControl : PictureBox
     {
         if (!change.Success) return;
 
-        AddFloating($"+{change.XpDelta} XP", -60, -78, Color.FromArgb(244, 170, 40));
+        if (change.XpDelta > 0) AddFloating($"+{change.XpDelta} XP", -60, -78, Color.FromArgb(244, 170, 40));
         if (change.MoodDelta > 0) AddFloating($"+{change.MoodDelta} Mood", 34, -82, Color.FromArgb(220, 80, 150));
         if (change.CoinDelta > 0) AddFloating($"+{change.CoinDelta} Coins", -20, -112, Color.FromArgb(210, 145, 20));
 
@@ -91,6 +103,29 @@ public class PetAnimationControl : PictureBox
 
         var item = change.Item;
         _shopEffect = new ShopItemEffect(item, 24);
+
+        // NEW: Item flight from bottom of screen
+        _itemFlight = new ItemFlightEffect(item.Emoji, 24);
+
+        // NEW: Burst particles for non-food items
+        if (!FoodItems.Contains(item.Name))
+        {
+            _burstParticles = BurstParticle.CreateBurst(12, item.Name == "Rainbow Toy" ? Color.FromArgb(255, 150, 80, 255) : Color.FromArgb(255, 255, 180, 80));
+        }
+
+        // NEW: Accessory overlay for wearable items
+        if (WearableItems.Contains(item.Name))
+        {
+            _accessoryOverlay = new AccessoryOverlayEffect(item.Emoji, 30);
+        }
+
+        // NEW: Happy jump animation
+        _isJumping = true;
+        _jumpTick = 0;
+
+        // NEW: Coin deduction floating text
+        _coinDeductAlpha = 255;
+        AddFloating($"🪙 -{item.Cost}", 40, -50, Color.FromArgb(180, 100, 100));
 
         if (change.HealthDelta > 0) AddFloating($"+{change.HealthDelta} Health", -70, -82, Color.FromArgb(215, 65, 80));
         if (change.MoodDelta > 0) AddFloating($"+{change.MoodDelta} Mood", 36, -82, Color.FromArgb(220, 80, 150));
@@ -129,8 +164,75 @@ public class PetAnimationControl : PictureBox
         if (isCat) PetRenderer.DrawCat(g, cx, cy, isHappy, isSad, _petFrame, stage, blinking);
         else       PetRenderer.DrawDog(g, cx, cy, isHappy, isSad, _petFrame, stage, blinking);
 
+        if (isSick) PetRenderer.DrawThermometer(g, cx, cy, _petFrame);
+
+        // NEW: Draw accessory overlay (wearable items)
+        if (_accessoryOverlay is not null)
+        {
+            float scale = _accessoryOverlay.Scale;
+            int alpha = _accessoryOverlay.Alpha;
+            string emoji = _accessoryOverlay.Emoji;
+            float hoverOffset = (float)Math.Sin(_accessoryOverlay.Emoji.Length) * 2f;
+
+            using var accFont = new Font("Segoe UI Emoji", 20f * scale);
+            using var accBrush = new SolidBrush(Color.FromArgb(alpha, 255, 255, 255));
+            g.DrawString(emoji, accFont, accBrush, cx - 2, cy - 58 + (int)hoverOffset);
+        }
+
+        // NEW: Draw burst particles
+        foreach (var p in _burstParticles)
+        {
+            int pAlpha = p.Alpha;
+            float pSize = p.Size;
+            int px = p.CurrentX;
+            int py = p.CurrentY;
+            var pColor = p.Color;
+
+            using var pBrush = new SolidBrush(Color.FromArgb(pAlpha, pColor));
+            g.FillEllipse(pBrush, px - pSize / 2, py - pSize / 2, pSize, pSize);
+
+            if (pSize > 5)
+            {
+                using var pPen = new Pen(Color.FromArgb(pAlpha / 2, pColor), 1f);
+                g.DrawLine(pPen, px - pSize, py, px + pSize, py);
+                g.DrawLine(pPen, px, py - pSize, px, py + pSize);
+            }
+        }
+
+        // NEW: Draw item flight
+        if (_itemFlight is not null)
+        {
+            var f = _itemFlight;
+            int fAlpha = (int)(f.Alpha * 255);
+            string fEmoji = f.Emoji;
+            int fy = f.CurrentY;
+            int fWiggle = f.Wiggle;
+
+            using var flightFont = new Font("Segoe UI Emoji", 22f);
+            using var flightBrush = new SolidBrush(Color.FromArgb(fAlpha, 255, 255, 255));
+            g.DrawString(fEmoji, flightFont, flightBrush, cx + fWiggle - 12, fy - 12);
+
+            if (f.Alpha > 0.3f)
+            {
+                using var trailBrush = new SolidBrush(Color.FromArgb((int)(f.Alpha * 80), 200, 180, 255));
+                g.FillEllipse(trailBrush, cx + fWiggle - 6, fy + 12, 12, 8);
+            }
+        }
+
         DrawShopEffect(g, cx, cy);
         DrawFloatingEffects(g, cx, cy);
+
+        // NEW: Draw coin deduction text
+        if (_coinDeductAlpha > 0)
+        {
+            using var font = new Font("Segoe UI", 9f, FontStyle.Bold);
+            var coinText = $"🪙 -{_shopEffect?.Item.Cost ?? 0}";
+            var size = TextRenderer.MeasureText(coinText, font);
+            int coinX = 10;
+            int coinY = 15;
+            using var coinBrush = new SolidBrush(Color.FromArgb(_coinDeductAlpha, 180, 100, 100));
+            TextRenderer.DrawText(g, coinText, font, new Point(coinX, coinY), coinBrush.Color, TextFormatFlags.NoPrefix);
+        }
 
         if (_bubbleVisible > 0 && !string.IsNullOrEmpty(_bubbleText))
             PetRenderer.DrawSpeechBubble(g, cx - 56, cy - 60, _bubbleText);
@@ -153,9 +255,24 @@ public class PetAnimationControl : PictureBox
     {
         _petFrame = (_petFrame + 1) % 4;
 
-        int[] sineOffsets = [0, -2, -4, -6, -7, -6, -4, -2];
-        _petBounceStep = (_petBounceStep + 1) % sineOffsets.Length;
-        _petBounceOffset = sineOffsets[_petBounceStep];
+        // NEW: Handle jump animation override
+        if (_isJumping)
+        {
+            _jumpTick++;
+            int[] jumpOffsets = [0, -8, -14, -18, -20, -18, -14, -8, 0, -6, -10, -12, -10, -6, 0];
+            _petBounceOffset = _jumpTick < jumpOffsets.Length ? jumpOffsets[_jumpTick] : 0;
+            if (_jumpTick >= jumpOffsets.Length)
+            {
+                _isJumping = false;
+                _petBounceOffset = 0;
+            }
+        }
+        else
+        {
+            int[] sineOffsets = [0, -2, -4, -6, -7, -6, -4, -2];
+            _petBounceStep = (_petBounceStep + 1) % sineOffsets.Length;
+            _petBounceOffset = sineOffsets[_petBounceStep];
+        }
 
         var mood = _gm.Pet.CurrentMood;
         _petState = mood switch
@@ -178,6 +295,10 @@ public class PetAnimationControl : PictureBox
         }
 
         if (_bubbleVisible > 0) _bubbleVisible--;
+
+        // NEW: Fade coin deduction text
+        if (_coinDeductAlpha > 0) _coinDeductAlpha -= 18;
+
         UpdateVisualEffects();
 
         Invalidate();
@@ -196,10 +317,10 @@ public class PetAnimationControl : PictureBox
         {
             (PetAnimationState.Happy, true) => CatHappy,
             (PetAnimationState.Sad, true) => CatSad,
-            (_, true) => _gm.Pet.IsSick ? CatSick : CatIdle,  // ← change
+            (_, true) => _gm.Pet.IsSick ? CatSick : CatIdle,
             (PetAnimationState.Happy, false) => DogHappy,
             (PetAnimationState.Sad, false) => DogSad,
-            _ => _gm.Pet.IsSick ? DogSick : DogIdle,  // ← change
+            _ => _gm.Pet.IsSick ? DogSick : DogIdle,
         };
         _bubbleText = pool[_rng.Next(pool.Length)];
         _bubbleVisible = 18;
@@ -229,6 +350,27 @@ public class PetAnimationControl : PictureBox
             _shopEffect.Tick();
             if (_shopEffect.IsDone) _shopEffect = null;
         }
+
+        // NEW: Update item flight
+        if (_itemFlight is not null)
+        {
+            _itemFlight.Tick();
+            if (_itemFlight.IsDone) _itemFlight = null;
+        }
+
+        // NEW: Update accessory overlay
+        if (_accessoryOverlay is not null)
+        {
+            _accessoryOverlay.Tick();
+            if (_accessoryOverlay.IsDone) _accessoryOverlay = null;
+        }
+
+        // NEW: Update burst particles
+        for (int i = _burstParticles.Count - 1; i >= 0; i--)
+        {
+            _burstParticles[i].Tick();
+            if (_burstParticles[i].IsDone) _burstParticles.RemoveAt(i);
+        }
     }
 
     private void DrawFloatingEffects(Graphics g, int cx, int cy)
@@ -247,6 +389,9 @@ public class PetAnimationControl : PictureBox
     {
         if (_shopEffect is null) return;
 
+        var isFood = FoodItems.Contains(_shopEffect.Item.Name);
+        var scale = isFood ? _shopEffect.ChompScale : 1f;
+
         var (xOffset, yOffset, label) = _shopEffect.Item.Name switch
         {
             "Pink Ribbon" => (0, -82, "sparkle"),
@@ -258,7 +403,7 @@ public class PetAnimationControl : PictureBox
             _ => (0, -60, "yay")
         };
 
-        using var emojiFont = new Font("Segoe UI Emoji", 24f, FontStyle.Regular);
+        using var emojiFont = new Font("Segoe UI Emoji", 24f * scale, FontStyle.Regular);
         using var labelFont = new Font("Segoe UI", 8f, FontStyle.Bold);
         using var labelBrush = new SolidBrush(Color.FromArgb(_shopEffect.Alpha, PawTheme.Primary));
 
@@ -310,7 +455,98 @@ public class PetAnimationControl : PictureBox
         public bool IsDone => _life <= 0;
         public int Alpha => Math.Clamp(255 * _life / _maxLife, 0, 255);
         public int Wiggle => _life % 2 == 0 ? -8 : 8;
+        public float ChompScale => Math.Max(1f - (float)(_maxLife - _life) / _maxLife * 1.2f, 0.1f);
 
         public void Tick() => _life--;
+    }
+
+    // NEW: Item flight effect
+    private sealed class ItemFlightEffect
+    {
+        private readonly int _maxLife;
+        private int _life;
+        private int _startY;
+
+        public ItemFlightEffect(string emoji, int life)
+        {
+            Emoji = emoji;
+            _maxLife = life;
+            _life = life;
+            _startY = 200;
+        }
+
+        public string Emoji { get; }
+        public bool IsDone => _life <= 0;
+        public float Progress => 1f - (float)_life / _maxLife;
+        public int CurrentY => _startY - (int)(_startY * Progress);
+        public float Alpha => Math.Clamp((float)_life / _maxLife, 0f, 1f);
+        public int Wiggle => _life % 2 == 0 ? -4 : 4;
+
+        public void Tick() => _life--;
+    }
+
+    // NEW: Accessory overlay effect
+    private sealed class AccessoryOverlayEffect
+    {
+        private readonly int _maxLife;
+        private int _life;
+
+        public AccessoryOverlayEffect(string emoji, int life)
+        {
+            Emoji = emoji;
+            _maxLife = life;
+            _life = life;
+        }
+
+        public string Emoji { get; }
+        public bool IsDone => _life <= 0;
+        public int Alpha => Math.Clamp(255 * _life / _maxLife, 0, 255);
+        public float Scale => 1f + (float)Math.Sin(_life * 0.3) * 0.1f;
+
+        public void Tick() => _life--;
+    }
+
+    // NEW: Burst particle effect
+    private sealed class BurstParticle
+    {
+        private readonly int _maxLife;
+        private int _life;
+        private readonly float _angle;
+        private readonly int _speed;
+        private readonly int _startX;
+        private readonly int _startY;
+
+        public BurstParticle(int startX, int startY, float angle, int speed, Color color, int life)
+        {
+            _startX = startX;
+            _startY = startY;
+            _angle = angle;
+            _speed = speed;
+            Color = color;
+            _maxLife = life;
+            _life = life;
+        }
+
+        public Color Color { get; }
+        public bool IsDone => _life <= 0;
+        public int Alpha => Math.Clamp(255 * _life / _maxLife, 0, 255);
+        public float Size => 3f + (float)(1f - (float)_life / _maxLife) * 4f;
+        public int CurrentX => _startX + (int)(Math.Cos(_angle) * _speed * (1f - (float)_life / _maxLife) * 20);
+        public int CurrentY => _startY + (int)(Math.Sin(_angle) * _speed * (1f - (float)_life / _maxLife) * 20) - 10;
+
+        public void Tick() => _life--;
+
+        public static List<BurstParticle> CreateBurst(int count, Color color)
+        {
+            var particles = new List<BurstParticle>();
+            var rng = new Random();
+            for (int i = 0; i < count; i++)
+            {
+                float angle = (float)(i * Math.PI * 2 / count) + (float)(rng.NextDouble() * 0.3);
+                int speed = rng.Next(1, 4);
+                particles.Add(new BurstParticle(0, 0, angle, speed, color, 18 + rng.Next(6)));
+            }
+            return particles;
+        }
     }
 }
