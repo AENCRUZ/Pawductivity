@@ -92,8 +92,8 @@ public class DashboardForm : Form
         _btnSettings = new Button
         {
             Text = "⚙",
-            Location = new Point(ClientSize.Width - Margin - 36, 9),
-            Size = new Size(36, 36),
+            Location = new Point(ClientSize.Width - Margin - 40, 7),
+            Size = new Size(40, 40),
             FlatStyle = FlatStyle.Flat,
             Font = new Font("Segoe UI Symbol", 13f, FontStyle.Bold),
             BackColor = PawTheme.Primary,
@@ -111,13 +111,13 @@ public class DashboardForm : Form
             ForeColor = Color.White,
             BackColor = Color.Transparent,
             AutoSize = true,
-            Location = new Point(Margin + 44, (TopBarH - 28) / 2),
+            Location = new Point(Margin + 24, (TopBarH - 40) / 2),
         };
 
         var lblUser = new Label
         {
             Text = $"Hi, {_gm.UserName}! 💕",
-            Font = new Font("Segoe UI", 9f),
+            Font = new Font("Segoe UI", 10f),
             ForeColor = Color.White,
             BackColor = Color.Transparent,
             AutoSize = true,
