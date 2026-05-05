@@ -55,7 +55,7 @@ public abstract class Pet
         >= 70 => PetMood.Happy,
         >= 40 => PetMood.Neutral,
         >= 20 => PetMood.Sad,
-        _ => PetMood.Sad   // low mood but not dead — still just Sad
+        _ => PetMood.Sick   // low mood but not dead — just Sick
     };
 
     public string MoodEmoji => CurrentMood switch
