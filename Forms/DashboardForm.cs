@@ -117,7 +117,7 @@ public class DashboardForm : Form
         var lblUser = new Label
         {
             Text = $"Hi, {_gm.UserName}! 💕",
-            Font = new Font("Segoe UI", 10f),
+            Font = new Font("Segoe UI", 9f),
             ForeColor = Color.White,
             BackColor = Color.Transparent,
             AutoSize = true,
