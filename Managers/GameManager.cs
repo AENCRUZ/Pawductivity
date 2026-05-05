@@ -52,7 +52,7 @@ public class GameManager
         int healthBefore = Pet.Health;
         int moodBefore = Pet.Mood;
         int coinsBefore = Pet.Coins;
-        int xpReward = GetTaskXpReward(task);
+        int xpBefore = Pet.XP;
 
         task.Complete();
         Pet.ReactToTaskCompleted(task);
@@ -61,7 +61,7 @@ public class GameManager
 
         return new PetChangeResult(
             true,
-            XpDelta: xpReward,
+            XpDelta: Pet.XP - xpBefore,
             MoodDelta: Pet.Mood - moodBefore,
             HealthDelta: Pet.Health - healthBefore,
             CoinDelta: Pet.Coins - coinsBefore,
