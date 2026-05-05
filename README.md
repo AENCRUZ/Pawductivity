@@ -112,6 +112,11 @@ Pawductivity/
 
 ![Theme Switching GIF](docs/images/theme-switching.gif)
 
+### Pet Animation
+
+![Start Up Preview](docs/images/pet-animation.gif)
+
+
 </div>
 
 ---
@@ -186,14 +191,6 @@ Your pet evolves through five stages as you level up. Each level costs `current_
 ---
 
 ## 😺 Mood System
-
-<div align="center">
-
-### Pet Mood Animations
-
-![Start Up Preview](docs/images/pet-animation.gif)
-
-</div>
 
 Your pet's mood is a 0–100 value that maps to one of four states:
 
