@@ -50,7 +50,7 @@ public class StartupForm : Form
         // ── Start Game button ─────────────────────────────────────────
         _btnStart = new Button
         {
-            Text = "Start Game 🐾",
+            Text = "Start 🐾",
             Size = new Size(250, 50),
             Location = new Point(btnX, btnY),
             FlatStyle = FlatStyle.Flat,
