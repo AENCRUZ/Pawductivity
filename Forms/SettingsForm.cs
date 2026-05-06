@@ -15,7 +15,7 @@ public class SettingsForm : Form
     private void InitializeComponent()
     {
         Text = "Settings";
-        Size = new Size(430, 450);
+        Size = new Size(430, 500);
         StartPosition = FormStartPosition.CenterParent;
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
