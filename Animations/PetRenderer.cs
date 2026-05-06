@@ -140,6 +140,7 @@ internal static class PetRenderer
         g.FillEllipse(bb, cx + 8, cy + 28 - (happy && frame % 2 == 0 ? 4 : 0), 16, 10);
 
         if (happy) DrawSparkles(g, cx, cy, frame, Color.FromArgb(255, 220, 100), 3, small: true);
+       
     }
 
     // ── Junior cat — growing up, longer tail, more whiskers ───────────
@@ -210,6 +211,7 @@ internal static class PetRenderer
             g.FillEllipse(blushb, cx - 30, cy - 12, 16, 10);
             g.FillEllipse(blushb, cx + 14, cy - 12, 16, 10);
             DrawSparkles(g, cx, cy, frame, Color.FromArgb(255, 200, 80), 4, small: false);
+            
         }
         if (sad) DrawTears(g, cx, cy, 2);
     }
@@ -294,6 +296,7 @@ internal static class PetRenderer
             g.FillEllipse(blushb, cx - 32, cy - 14, 16, 10);
             g.FillEllipse(blushb, cx + 16, cy - 14, 16, 10);
             DrawHearts(g, cx, cy, frame, 3);
+            
         }
         if (sad) DrawTears(g, cx, cy, 2);
     }
@@ -472,6 +475,7 @@ internal static class PetRenderer
         g.FillEllipse(bodyBrush, cx + 6,  cy + 28 - (happy && frame % 2 == 0 ? 4 : 0), 18, 10);
 
         if (happy) DrawSparkles(g, cx, cy, frame, Color.FromArgb(255, 180, 80), 3, small: true);
+        
     }
 
     // ── Junior dog (Lv 4-6) ──────────────────────────────────────────
@@ -605,6 +609,7 @@ internal static class PetRenderer
             g.FillEllipse(blushBrush, cx - 32, cy - 14, 16, 10);
             g.FillEllipse(blushBrush, cx + 16, cy - 14, 16, 10);
             DrawHearts(g, cx, cy, frame, 4);
+            
         }
         if (sad) DrawTears(g, cx, cy, 2);
     }
@@ -682,6 +687,7 @@ internal static class PetRenderer
         }
         else if (sad)
         {
+            // same eyes as neutral
             var eyeColor = Color.FromArgb(80, 50, isDog ? 20 : 50);
             using var eyeBrush = new SolidBrush(eyeColor);
             g.FillEllipse(eyeBrush, cx - ex - 6, eyeY - 4, 12, 11);
@@ -690,6 +696,7 @@ internal static class PetRenderer
             g.FillEllipse(shineBrush, cx - ex - 3, eyeY - 2, 4, 4);
             g.FillEllipse(shineBrush, cx + ex - 3, eyeY - 2, 4, 4);
 
+            // sad eyebrows angled down toward the middle ↘ ↙
             using var browPen = new Pen(eyeColor, 2f)
             {
                 StartCap = System.Drawing.Drawing2D.LineCap.Round,
@@ -777,6 +784,8 @@ internal static class PetRenderer
         path.AddBezier(x, y + size * 2, x + size * 2, y + size / 2, x + size, y - size, x, y);
         g.FillPath(brush, path);
     }
+
+   
 
     internal static void DrawThermometer(Graphics g, int cx, int cy, int frame)
     {
