@@ -479,7 +479,7 @@ public class DashboardForm : Form
         _lblPending.Text = $"📋 Pending: {_gm.PendingCount}";
         
         RefreshTaskList();
-
+    }
         private void RefreshTaskList()
         {
             string filter = _cmbFilter?.SelectedItem?.ToString() ?? "All";
