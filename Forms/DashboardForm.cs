@@ -330,6 +330,10 @@ public class DashboardForm : Form
         _lvTasks.Columns.Add("Status", 96);
 
         _lvTasks.OwnerDraw = true;
+        typeof(ListView).GetProperty("DoubleBuffered",
+            System.Reflection.BindingFlags.NonPublic |
+            System.Reflection.BindingFlags.Instance)!
+            .SetValue(_lvTasks, true);
         _lvTasks.ItemSelectionChanged += (s, e) => _lvTasks.Invalidate();
         _lvTasks.ColumnWidthChanging += (s, e) =>
         {
@@ -407,13 +411,18 @@ public class DashboardForm : Form
         bool hot = (e.State & ListViewItemStates.Hot) != 0;
 
         Color bg = sel ? PawTheme.Primary :
-                   hot ? PawTheme.Secondary :
                    task.IsCompleted ? PawTheme.CompletedTask :
                    task.IsOverdue ? PawTheme.OverdueTask :
-                                      _lvTasks.BackColor;
+                                     _lvTasks.BackColor;
 
         using var brush = new SolidBrush(bg);
         e.Graphics.FillRectangle(brush, e.Bounds);
+
+        if (hot && !sel)
+        {
+            using var hoverBrush = new SolidBrush(Color.FromArgb(40, PawTheme.TextDark));
+            e.Graphics.FillRectangle(hoverBrush, e.Bounds);
+        }
     }
 
     private void LvTasks_DrawSubItem(object? sender, DrawListViewSubItemEventArgs e)
@@ -427,9 +436,11 @@ public class DashboardForm : Form
         e.Graphics.FillRectangle(bgBrush, e.Bounds);
 
         // Always use a visible foreground regardless of hover/selection state
+        bool hot2 = (e.ItemState & ListViewItemStates.Hot) != 0;
         Color fg = sel ? Color.White :
                    task.IsCompleted ? PawTheme.TextGreen :
-                                       PawTheme.TextDark;
+                   task.IsOverdue ? PawTheme.TextDark :
+                                     PawTheme.TextDark;
 
         var flags = TextFormatFlags.Left | TextFormatFlags.VerticalCenter |
                     TextFormatFlags.EndEllipsis | TextFormatFlags.NoPrefix;
