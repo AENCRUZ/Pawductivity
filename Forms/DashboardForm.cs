@@ -502,13 +502,23 @@ public class DashboardForm : Form
     private void BtnDelete_Click(object? sender, EventArgs e)
     {
         if (_lvTasks.SelectedItems.Count == 0) return;
-        var task = (TaskItem)_lvTasks.SelectedItems[0].Tag!;
-        if (MessageBox.Show($"Delete \"{task.Title}\"?", "Confirm",
-                            MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-        {
+
+        string confirmMsg = _lvTasks.SelectedItems.Count == 1
+            ? $"Delete \"{((TaskItem)_lvTasks.SelectedItems[0].Tag!).Title}\"?"
+            : $"Delete {_lvTasks.SelectedItems.Count} selected tasks?";
+
+        if (MessageBox.Show(confirmMsg, "Confirm",
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
+
+        var toDelete = _lvTasks.SelectedItems
+            .Cast<ListViewItem>()
+            .Select(i => (TaskItem)i.Tag!)
+            .ToList();
+
+        foreach (var task in toDelete)
             _gm.DeleteTask(task.Id);
-            RefreshAll();
-        }
+
+        RefreshAll();
     }
 
 
