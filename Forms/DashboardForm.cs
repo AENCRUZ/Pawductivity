@@ -507,7 +507,6 @@ public class DashboardForm : Form
                 _lvTasks.Items.Add(item);
             }
         }   
-    }
     
     // ── DECAY TIMER ──────────────────────────────────────────────────
     private void StartDecayTimer()
