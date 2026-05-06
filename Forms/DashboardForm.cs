@@ -312,6 +312,7 @@ public class DashboardForm : Form
             View = View.Details,
             FullRowSelect = true,
             HideSelection = false,
+            MultiSelect = true,
             GridLines = false,
             HotTracking = true,
             BackColor = PawTheme.Background,
@@ -449,14 +450,29 @@ public class DashboardForm : Form
     private void BtnComplete_Click(object? sender, EventArgs e)
     {
         if (_lvTasks.SelectedItems.Count == 0) return;
-        var selected = _lvTasks.SelectedItems[0];
-        if (selected?.Tag is not TaskItem task) { ShowInfo("No task selected."); return; }
-        if (task.IsCompleted) { ShowInfo("This task is already done! 🎉"); return; }
 
-        var change = _gm.CompleteTask(task.Id);
-        ShowInfo($"{_gm.Pet.GetGreeting()}\n\n+{change.XpDelta} XP gained! 🌟 Coins earned: {change.CoinDelta} 🪙");
+        int totalXp = 0;
+        int totalCoins = 0;
+        int completed = 0;
+        PetChangeResult? lastChange = null;
+
+        foreach (ListViewItem selected in _lvTasks.SelectedItems)
+        {
+            if (selected?.Tag is not TaskItem task) continue;
+            if (task.IsCompleted) continue;
+
+            var change = _gm.CompleteTask(task.Id);
+            totalXp += change.XpDelta;
+            totalCoins += change.CoinDelta;
+            completed++;
+            lastChange = change;
+        }
+
+        if (completed == 0) { ShowInfo("All selected tasks are already done! 🎉"); return; }
+
+        ShowInfo($"{_gm.Pet.GetGreeting()}\n\n{completed} task(s) completed!\n+{totalXp} XP gained! 🌟 Coins earned: {totalCoins} 🪙");
         RefreshAll();
-        _petCanvas.ShowTaskCompletion(change);
+        if (lastChange is not null) _petCanvas.ShowTaskCompletion(lastChange);
     }
 
     private void BtnEdit_Click(object? sender, EventArgs e)
