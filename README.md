@@ -67,12 +67,12 @@ Pawductivity/
 ├── Animations/
 │   ├── PetAnimationState.cs       ← Pet animation state enum (Idle, Happy, Sad, Sick)
 │   └── PetRenderer.cs             ← GDI+ drawing for cat/dog (5 evolution stages each),
-│   │                                speech bubbles, hearts, sparkles, tears, thermometer
+│                                    speech bubbles, hearts, sparkles, tears, thermometer
 │
 ├── Controls/
 │   └── PetAnimationControl.cs     ← Custom PictureBox: timer-driven pet animation,
-│   │                                floating effects, shop purchase animations
-│   │                                (ItemFlightEffect, AccessoryOverlayEffect, BurstParticle)
+│                                    floating effects, shop purchase animations
+│                                    (ItemFlightEffect, AccessoryOverlayEffect, BurstParticle)
 │
 ├── Models/
 │   ├── Pet.cs                     ← Abstract base class: encapsulated stats with clamping,
@@ -90,7 +90,7 @@ Pawductivity/
 │   ├── GameManager.cs             ← Core game logic: CRUD tasks, complete/overdue penalties,
 │   │                                shop purchases, streak tracking, analytics helpers
 │   └── SaveManager.cs             ← JSON persistence: atomic temp-then-rename writes,
-│   │                                profile list/load/delete, snapshot/restore
+│                                    profile list/load/delete, snapshot/restore
 │
 └── Forms/
     ├── StartupForm.cs             ← Splash/welcome screen (app entry point)
@@ -249,7 +249,7 @@ The animation system is fully decoupled from the dashboard UI. `DashboardForm` h
 | `ItemFlightEffect` | Shop item flies up from bottom of screen |
 | `AccessoryOverlayEffect` | Wearable items (ribbon, crown) hover above pet |
 | `BurstParticle` | Radial burst of particles for non-food items |
-| Happy jump | Double-bounce jump animation on purchase |
+| `Happy jump` | Double-bounce jump animation on purchase |
 
 ---
 
