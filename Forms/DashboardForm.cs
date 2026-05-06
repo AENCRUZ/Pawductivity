@@ -22,6 +22,7 @@ public class DashboardForm : Form
     // Task panel widgets
     private ListView _lvTasks = null!;
     private ComboBox _cmbFilter = null!;
+    private ComboBox _cmbPriority = null!;
     private Button _btnAddTask = null!;
     private Button _btnComplete = null!;
     private Button _btnDelete = null!;
@@ -253,6 +254,15 @@ public class DashboardForm : Form
             BackColor = Color.Transparent,
         };
 
+        var lblFilterLabel = new Label
+        {
+            Text = "Status:",
+            Font = PawTheme.FontSmall,
+            ForeColor = PawTheme.TextMuted,
+            AutoSize = true,
+            BackColor = Color.Transparent,
+        };
+
         _cmbFilter = new ComboBox
         {
             DropDownStyle = ComboBoxStyle.DropDownList,
@@ -268,7 +278,31 @@ public class DashboardForm : Form
         _cmbFilter.SelectedIndex = 0;
         _cmbFilter.SelectedIndexChanged += (s, e) => RefreshTaskList();
 
-        int listTop = lblTaskTitle.Bottom + 10;
+        _cmbPriority = new ComboBox
+        {
+            DropDownStyle = ComboBoxStyle.DropDownList,
+            Font = PawTheme.FontBody,
+            BackColor = PawTheme.Background,
+            ForeColor = PawTheme.TextDark,
+            FlatStyle = FlatStyle.Flat,
+            Width = 130,
+            Height = 26,
+            Anchor = AnchorStyles.Top | AnchorStyles.Right,
+        };
+        _cmbPriority.Items.AddRange(new object[] { "All", "High", "Medium", "Low" });
+        _cmbPriority.SelectedIndex = 0;
+        _cmbPriority.SelectedIndexChanged += (s, e) => RefreshTaskList();
+
+        var lblPriorityLabel = new Label
+        {
+            Text = "Priority:",
+            Font = PawTheme.FontSmall,
+            ForeColor = PawTheme.TextMuted,
+            AutoSize = true,
+            BackColor = Color.Transparent,
+        };
+
+        int listTop = lblTaskTitle.Bottom + 50;
         int listH = petPanelH - listTop - ButtonH - InnerPad * 2 - 4;
 
         _lvTasks = new ListView
@@ -344,15 +378,21 @@ public class DashboardForm : Form
 
         taskPanel.Resize += (s, e) =>
         {
-            _cmbFilter.Location = new Point(taskPanel.Width - _cmbFilter.Width - InnerPad, InnerPad - 2);
+            _cmbFilter.Location = new Point(taskPanel.Width - _cmbFilter.Width - InnerPad, lblTaskTitle.Bottom + 18);
+            lblFilterLabel.Location = new Point(taskPanel.Width - _cmbFilter.Width - InnerPad, lblTaskTitle.Bottom - 1);
+            _cmbPriority.Location = new Point(taskPanel.Width - _cmbFilter.Width - _cmbPriority.Width - InnerPad - 16, lblTaskTitle.Bottom + 18);
+            lblPriorityLabel.Location = new Point(taskPanel.Width - _cmbFilter.Width - _cmbPriority.Width - InnerPad - 16, lblTaskTitle.Bottom - 1);
         };
-        _cmbFilter.Location = new Point(taskPanelW - _cmbFilter.Width - InnerPad, InnerPad - 2);
+        _cmbFilter.Location = new Point(taskPanelW - _cmbFilter.Width - InnerPad, lblTaskTitle.Bottom + 18);
+        lblFilterLabel.Location = new Point(taskPanelW - _cmbFilter.Width - InnerPad, lblTaskTitle.Bottom - 1);
+        _cmbPriority.Location = new Point(taskPanelW - _cmbFilter.Width - _cmbPriority.Width - InnerPad - 16, lblTaskTitle.Bottom + 18);
+        lblPriorityLabel.Location = new Point(taskPanelW - _cmbFilter.Width - _cmbPriority.Width - InnerPad - 16, lblTaskTitle.Bottom - 1);
 
         taskPanel.Controls.AddRange([
-            lblTaskTitle, _cmbFilter, _lvTasks,
+            lblTaskTitle, lblFilterLabel, _cmbFilter, lblPriorityLabel, _cmbPriority, _lvTasks,
             _btnAddTask, _btnComplete, _btnEdit, _btnDelete,
         ]);
-        
+
         Controls.AddRange([topBar, petPanel, taskPanel]);
     }
 
@@ -483,19 +523,27 @@ public class DashboardForm : Form
         private void RefreshTaskList()
         {
             string filter = _cmbFilter?.SelectedItem?.ToString() ?? "All";
+            string priority = _cmbPriority?.SelectedItem?.ToString() ?? "All";
 
             var tasks = _gm.Tasks
                 .Where(t => filter switch
                 {
                     "Pending" => !t.IsCompleted && !t.IsOverdue,
                     "Overdue" => t.IsOverdue && !t.IsCompleted,
-                    "Done"    => t.IsCompleted,
-                    _         => true,
+                    "Done" => t.IsCompleted,
+                    _ => true,
+                })
+                .Where(t => priority switch
+                {
+                    "High" => t.Priority == TaskPriority.High,
+                    "Medium" => t.Priority == TaskPriority.Medium,
+                    "Low" => t.Priority == TaskPriority.Low,
+                    _ => true,
                 })
                 .OrderBy(t => t.IsCompleted)
                 .ThenBy(t => t.DueDate);
 
-            _lvTasks.Items.Clear();
+        _lvTasks.Items.Clear();
             foreach (var t in tasks)
             {
                 var item = new ListViewItem(t.IsCompleted ? "✅" : t.IsOverdue ? "⚠️" : "⬜");
