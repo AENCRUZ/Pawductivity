@@ -55,6 +55,17 @@ public static class PawTheme
             Color.FromArgb(124, 100, 166)),
 
         new(
+            "mono", "Monochrome",
+            Color.FromArgb(255, 255, 255), Color.FromArgb(240, 240, 240),
+            Color.FromArgb(30, 30, 30),   Color.FromArgb(60, 60, 60),
+            Color.FromArgb(200, 200, 200), Color.FromArgb(80, 80, 80),
+            Color.FromArgb(10, 10, 10),   Color.FromArgb(100, 100, 100),
+            Color.FromArgb(50, 50, 50),   Color.FromArgb(80, 80, 80),
+            Color.FromArgb(30, 30, 30),   Color.FromArgb(140, 200, 140),
+            Color.FromArgb(20, 100, 40),  Color.FromArgb(180, 50, 50),
+            Color.FromArgb(160, 160, 160)),
+        
+        new(
             "strawberry", "Strawberry",
             Color.FromArgb(255, 246, 241), Color.FromArgb(255, 225, 218),
             Color.FromArgb(230, 82, 105), Color.FromArgb(205, 62, 86),
