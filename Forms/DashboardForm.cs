@@ -302,7 +302,7 @@ public class DashboardForm : Form
             BackColor = Color.Transparent,
         };
 
-        int listTop = lblTaskTitle.Bottom + 50;
+        int listTop = lblTaskTitle.Bottom + 55;
         int listH = petPanelH - listTop - ButtonH - InnerPad * 2 - 4;
 
         _lvTasks = new ListView
