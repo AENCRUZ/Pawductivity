@@ -21,6 +21,7 @@ public class DashboardForm : Form
 
     // Task panel widgets
     private ListView _lvTasks = null!;
+    private ComboBox _cmbFilter = null!;
     private Button _btnAddTask = null!;
     private Button _btnComplete = null!;
     private Button _btnDelete = null!;
@@ -252,6 +253,21 @@ public class DashboardForm : Form
             BackColor = Color.Transparent,
         };
 
+        _cmbFilter = new ComboBox
+        {
+            DropDownStyle = ComboBoxStyle.DropDownList,
+            Font = PawTheme.FontBody,
+            BackColor = PawTheme.Background,
+            ForeColor = PawTheme.TextDark,
+            FlatStyle = FlatStyle.Flat,
+            Width = 130,
+            Height = 26,
+            Anchor = AnchorStyles.Top | AnchorStyles.Right,
+        };
+        _cmbFilter.Items.AddRange(new object[] { "All", "Pending", "Overdue", "Done" });
+        _cmbFilter.SelectedIndex = 0;
+        _cmbFilter.SelectedIndexChanged += (s, e) => RefreshTaskList();
+
         int listTop = lblTaskTitle.Bottom + 10;
         int listH = petPanelH - listTop - ButtonH - InnerPad * 2 - 4;
 
@@ -326,11 +342,17 @@ public class DashboardForm : Form
         _btnEdit.Click += BtnEdit_Click;
         _btnDelete.Click += BtnDelete_Click;
 
+        taskPanel.Resize += (s, e) =>
+        {
+            _cmbFilter.Location = new Point(taskPanel.Width - _cmbFilter.Width - InnerPad, InnerPad - 2);
+        };
+        _cmbFilter.Location = new Point(taskPanelW - _cmbFilter.Width - InnerPad, InnerPad - 2);
+
         taskPanel.Controls.AddRange([
-            lblTaskTitle, _lvTasks,
+            lblTaskTitle, _cmbFilter, _lvTasks,
             _btnAddTask, _btnComplete, _btnEdit, _btnDelete,
         ]);
-
+        
         Controls.AddRange([topBar, petPanel, taskPanel]);
     }
 
@@ -455,20 +477,38 @@ public class DashboardForm : Form
         _lblToday.Text = $"✅ Completed today: {_gm.CompletedToday}";
         _lblStreak.Text = $"🔥 Streak: {_gm.CurrentStreak} day(s)";
         _lblPending.Text = $"📋 Pending: {_gm.PendingCount}";
+        
+        RefreshTaskList();
 
-        _lvTasks.Items.Clear();
-        foreach (var t in _gm.Tasks.OrderBy(t => t.IsCompleted).ThenBy(t => t.DueDate))
+        private void RefreshTaskList()
         {
-            var item = new ListViewItem(t.IsCompleted ? "✅" : t.IsOverdue ? "⚠️" : "⬜");
-            item.SubItems.Add(t.Title);
-            item.SubItems.Add($"{t.PriorityEmoji} {t.Priority}");
-            item.SubItems.Add(t.DueDate.ToString("MMM dd"));
-            item.SubItems.Add(t.IsCompleted ? "Done 🎉" : t.IsOverdue ? "Overdue!" : "Pending");
-            item.Tag = t;
-            _lvTasks.Items.Add(item);
-        }
-    }
+            string filter = _cmbFilter?.SelectedItem?.ToString() ?? "All";
 
+            var tasks = _gm.Tasks
+                .Where(t => filter switch
+                {
+                    "Pending" => !t.IsCompleted && !t.IsOverdue,
+                    "Overdue" => t.IsOverdue && !t.IsCompleted,
+                    "Done"    => t.IsCompleted,
+                    _         => true,
+                })
+                .OrderBy(t => t.IsCompleted)
+                .ThenBy(t => t.DueDate);
+
+            _lvTasks.Items.Clear();
+            foreach (var t in tasks)
+            {
+                var item = new ListViewItem(t.IsCompleted ? "✅" : t.IsOverdue ? "⚠️" : "⬜");
+                item.SubItems.Add(t.Title);
+                item.SubItems.Add($"{t.PriorityEmoji} {t.Priority}");
+                item.SubItems.Add(t.DueDate.ToString("MMM dd"));
+                item.SubItems.Add(t.IsCompleted ? "Done 🎉" : t.IsOverdue ? "Overdue!" : "Pending");
+                item.Tag = t;
+                _lvTasks.Items.Add(item);
+            }
+        }   
+    }
+    
     // ── DECAY TIMER ──────────────────────────────────────────────────
     private void StartDecayTimer()
     {
