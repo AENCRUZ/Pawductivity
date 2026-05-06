@@ -54,6 +54,7 @@ public class GameManager
         int coinsBefore = Pet.Coins;
         int xpBefore = Pet.XP;
         int levelBefore = Pet.Level;
+        int xpForNextLevelBefore = Pet.XpForNextLevel;
 
         task.Complete();
         Pet.ReactToTaskCompleted(task);
@@ -61,8 +62,8 @@ public class GameManager
         UpdateStreak();
 
         int xpGained = Pet.Level > levelBefore
-            ? (Pet.XpForNextLevel - xpBefore) + Pet.XP  // XP before level-up + XP after reset
-            : Pet.XP - xpBefore;
+        ? (xpForNextLevelBefore - xpBefore) + Pet.XP
+        : Pet.XP - xpBefore;
 
         return new PetChangeResult(
             true,
