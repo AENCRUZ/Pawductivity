@@ -15,7 +15,7 @@ public class StatsForm : Form
     private void InitializeComponent()
     {
         Text            = "📊 Productivity Stats";
-        Size            = new Size(460, 480);
+        Size            = new Size(470, 610);
         StartPosition   = FormStartPosition.CenterParent;
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox     = false;
@@ -87,7 +87,7 @@ public class StatsForm : Form
             Location  = new Point(20, y),
             BackColor = Color.Transparent,
         });
-        y += 18;
+        y += 26;
         var pb = new ProgressBar
         {
             Location = new Point(20, y),
@@ -98,5 +98,16 @@ public class StatsForm : Form
             Style    = ProgressBarStyle.Continuous,
         };
         Controls.Add(pb);
+
+        y += 40;
+        var btnClose = new Button
+        {
+            Text = "Close",
+            Location = new Point(300, y),
+            Width = 120,
+        };
+        PawTheme.StyleButton(btnClose, outlined: true);
+        btnClose.Click += (s, e) => Close();
+        Controls.Add(btnClose);
     }
 }
