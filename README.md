@@ -208,7 +208,7 @@ Your pet evolves through five stages as you level up. Each level costs `current_
 Your pet's mood is a 0–100 value that maps to one of four states:
 
 | Mood | State | Emoji | Effect |
-|---|---|---|---|---|
+|---|---|---|---|
 | 70–100 | Happy | `🐾✨` | Positive greetings and happy animation |
 | 40–69 | Neutral | `🐾` | Calm, waiting behavior |
 | 20–39 | Sad | `😿` / `🥺` | Sad expression and animation |
@@ -315,7 +315,7 @@ Items are categorized internally as **Food** (Star Cookie, Strawberry Milk) or *
 Open settings via the `⚙` button in the top bar to switch themes instantly. Each profile saves its own theme selection. The dashboard can rebuild itself with the new theme without restarting the app. Themes are presented as styled color-swatch buttons showing the theme's surface and primary colors.
 
 | Theme | Style |
-|---|---|---|
+|---|---|
 | Pink Kawaii | Original soft pink theme |
 | Blue Calm | Light blue productivity palette |
 | Green Nature | Fresh green palette |
