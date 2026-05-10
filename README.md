@@ -444,7 +444,16 @@ Each method returns a `PetChangeResult` that tells the UI exactly what changed �
 
 ## 👥 Team
 
+![Team LAVA](docs/images/team_LAVA.png)
+
 **Team LAVA** · CS-2202 · Batangas State University
+
+| Member | Role |
+|---|---|
+| **Vianci** | Game Logic & Backend Developer |
+| **Angelyn** | Full-Stack Developer & Project Lead |
+| **Lian** | Animation & Frontend Developer |
+| **Aleckxa** | Game Features & Systems Developer |
 
 *Made with 💖 for CS 222 — Advanced Object-Oriented Programming*
 
