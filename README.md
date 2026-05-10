@@ -12,7 +12,7 @@
 ![Platform](https://img.shields.io/badge/Windows-0078D4?style=flat-square&logo=windows&logoColor=white)
 ![Framework](https://img.shields.io/badge/.NET_8_WinForms-512BD4?style=flat-square&logo=dotnet&logoColor=white)
 ![IDE](https://img.shields.io/badge/Visual_Studio-5C2D91?style=flat-square&logo=visualstudio&logoColor=white)
-![Themes](https://img.shields.io/badge/Themes-5_Palettes-ff69b4?style=flat-square)
+![Themes](https://img.shields.io/badge/Themes-6_Themes-ff69b4?style=flat-square)
 
 > *Stay productive. Keep your pet happy. Don't let your tasks go overdue.*
 
@@ -59,7 +59,7 @@ Pawductivity/
 ├── Pawductivity.slnx              ← Solution file
 ├── Pawductivity.csproj            ← Project file (net8.0-windows, nullable enabled)
 ├── Program.cs                     ← Entry point (starts with StartupForm)
-├── PawTheme.cs                    ← Theme system: 5 palettes, fonts, button/card styles
+├── PawTheme.cs                    ← Theme system: 6 palettes, fonts, button/card styles
 │
 ├── Assets/
 │   └── startup_bg.png             ← Background image for StartupForm
@@ -208,11 +208,11 @@ Your pet evolves through five stages as you level up. Each level costs `current_
 Your pet's mood is a 0–100 value that maps to one of four states:
 
 | Mood | State | Emoji | Effect |
-|---|---|---|---|
+|---|---|---|---|---|
 | 70–100 | Happy | `🐾✨` | Positive greetings and happy animation |
 | 40–69 | Neutral | `🐾` | Calm, waiting behavior |
 | 20–39 | Sad | `😿` / `🥺` | Sad expression and animation |
-| 0–19 | Sick | `🤒` | Urgent — complete tasks or visit the shop |
+| 0–19 | Sad | `😿` / `🥺` | Same as Sad — Sick is triggered by Health ≤ 19 |
 
 ### Task Effects
 
@@ -234,6 +234,7 @@ The animation system is fully decoupled from the dashboard UI. `DashboardForm` h
 | Event | Animation |
 |---|---|
 | Idle | Gentle bounce, blinking, mood-based expression |
+| Bounce | Excited bouncing animation on shop purchase |
 | Speech bubble | Random cat/dog messages based on mood |
 | Task completed | XP, mood, and coin floating text |
 | Task overdue | Health and mood loss floating text |
@@ -266,9 +267,8 @@ The **Stats screen** (`StatsForm`) gives you a snapshot of your productivity ove
 Tracked metrics include:
 
 | Metric | Description |
-|---|---|
+|---|---|---|
 | Tasks completed | Total number of tasks finished |
-| Tasks missed | Total overdue tasks that triggered a penalty |
 | Current streak | Consecutive days with at least one task completed |
 | Longest streak | Your all-time best streak |
 | Coins earned | Total coins accumulated from task completions |
@@ -312,15 +312,16 @@ Items are categorized internally as **Food** (Star Cookie, Strawberry Milk) or *
 
 </div>
 
-Open settings via the `⚙` button in the top bar to switch themes instantly. Each profile saves its own theme selection. The dashboard can rebuild itself with the new theme without restarting the app.
+Open settings via the `⚙` button in the top bar to switch themes instantly. Each profile saves its own theme selection. The dashboard can rebuild itself with the new theme without restarting the app. Themes are presented as styled color-swatch buttons showing the theme's surface and primary colors.
 
 | Theme | Style |
-|---|---|
+|---|---|---|
 | Pink Kawaii | Original soft pink theme |
 | Blue Calm | Light blue productivity palette |
 | Green Nature | Fresh green palette |
 | Purple Night | Dark purple theme |
 | Strawberry | Warm red-pink palette |
+| Monochrome | Minimal grayscale theme |
 
 Theme palettes live in `PawTheme.cs`. `PawTheme.SetTheme(...)` updates the active palette, and forms read colors from static properties:
 
@@ -443,14 +444,15 @@ Each method returns a `PetChangeResult` that tells the UI exactly what changed �
 <div align="center">
 
 ## 👥 Team
+
 ![Team LAVA](docs/images/team_LAVA.png)
 **Team LAVA** · CS-2202 · Batangas State University
 | Member | Role |
 |---|---|
+| [AENCRUZ](https://github.com/AENCRUZ) | Lead Developer & Full-Stack Engineer |
+| [ancimochi](https://github.com/ancimochi) | UI/UX Designer & Game Logic Developer |
 | [Riossium](https://github.com/Riossium) | Animations, Frontend & QA |
 | [aleckxareign](https://github.com/aleckxareign) | Game Features & Systems Developer |
-| [ancimochi](https://github.com/ancimochi) | UI/UX Designer & Game Logic Developer |
-| [AENCRUZ](https://github.com/AENCRUZ) | Lead Developer & Full-Stack Engineer |
 
 *Made with 💖 for CS 222 — Advanced Object-Oriented Programming*
 
