@@ -424,6 +424,24 @@ Each method returns a `PetChangeResult` that tells the UI exactly what changed �
 
 <div align="center">
 
+## 📐 UML Diagrams
+
+### Class Diagram
+
+![Class Diagram](docs/images/Pawductivity%20Class%20Diagram.png)
+
+### Sequence Diagram — Task Completion Flow
+
+![Sequence Diagram](docs/images/Pawductivity%20-%20Task%20Completion%20Flow.png)
+
+</div>
+
+> The PlantUML source files are in [`docs/pawductivity_uml.puml`](docs/pawductivity_uml.puml) and [`docs/pawductivity_sequence.puml`](docs/pawductivity_sequence.puml).
+
+---
+
+<div align="center">
+
 ## 👥 Team
 
 **Team LAVA** · CS-2202 · Batangas State University
