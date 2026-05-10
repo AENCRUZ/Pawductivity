@@ -77,7 +77,7 @@ public class TaskEditForm : Form
             Location  = new Point(200, y + 20),
             Width     = 160,
             Font      = PawTheme.FontBody,
-            MinDate   = DateTime.Today,
+            MinDate = _editTarget is null ? DateTime.Today : DateTime.MinValue,
             Value     = DateTime.Today,
             Format    = DateTimePickerFormat.Short,
         };
