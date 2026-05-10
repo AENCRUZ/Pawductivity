@@ -436,6 +436,8 @@ Each method returns a `PetChangeResult` that tells the UI exactly what changed â
 
 </div>
 
+> The PlantUML source files are in [`docs/pawductivity_uml.puml`](docs/pawductivity_uml.puml) and [`docs/pawductivity_sequence.puml`](docs/pawductivity_sequence.puml).
+
 ---
 
 <div align="center">
