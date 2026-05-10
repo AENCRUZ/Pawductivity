@@ -267,7 +267,7 @@ The **Stats screen** (`StatsForm`) gives you a snapshot of your productivity ove
 Tracked metrics include:
 
 | Metric | Description |
-|---|---|---|
+|---|---|
 | Tasks completed | Total number of tasks finished |
 | Current streak | Consecutive days with at least one task completed |
 | Longest streak | Your all-time best streak |
