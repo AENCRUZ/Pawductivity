@@ -451,5 +451,7 @@ Each method returns a `PetChangeResult` that tells the UI exactly what changed �
 | [aleckxareign](https://github.com/aleckxareign) | Game Features & Systems Developer |
 | [ancimochi](https://github.com/ancimochi) | UI/UX Designer & Game Logic Developer |
 | [AENCRUZ](https://github.com/AENCRUZ) | Lead Developer & Full-Stack Engineer |
+
 *Made with 💖 for CS 222 — Advanced Object-Oriented Programming*
+
 </div>
