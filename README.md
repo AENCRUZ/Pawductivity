@@ -449,11 +449,11 @@ Each method returns a `PetChangeResult` that tells the UI exactly what changed �
 **Team LAVA** · CS-2202 · Batangas State University
 
 | Member | Role |
-|---|---|
-| **Vianci** | Game Logic & Backend Developer |
-| **Angelyn** | Full-Stack Developer & Project Lead |
-| **Lian** | Animation & Frontend Developer |
-| **Aleckxa** | Game Features & Systems Developer |
+|---|---|---|
+| [Riossium](https://github.com/Riossium) | Animations, Frontend & QA |
+| [aleckxareign](https://github.com/aleckxareign) | Game Features & Systems Developer |
+| [ancimochi](https://github.com/ancimochi) | UI/UX Designer & Game Logic Developer |
+| [AENCRUZ](https://github.com/AENCRUZ) | Lead Developer & Full-Stack Engineer |
 
 *Made with 💖 for CS 222 — Advanced Object-Oriented Programming*
 
